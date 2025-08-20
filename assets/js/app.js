@@ -193,5 +193,75 @@ mainBtn.addEventListener("click", () => {
   buildGrid();
 });
 
+// ===== Modal helpers =====
+const modal = document.getElementById('spot-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalImg = document.getElementById('modal-image');
+const modalStatus = document.getElementById('modal-status');
+const modalLangButtons = document.getElementById('modal-lang-buttons');
+
+// Reuse your existing "play audio" function if you have one,
+// or keep this simple handler that expects data attributes.
+function playAudioFor(lang, title) {
+  // Example: build a path like assets/audio/turkey/istanbul/<lang>.mp3
+  // If you already set src elsewhere, keep your implementation.
+  // This is just a fallback to avoid breaking anything.
+  if (!audio) return;
+  // Update status text (modal)
+  if (modalStatus) modalStatus.textContent = `Playing ${lang} for ${title}…`;
+  audio.play().catch(() => {});
+}
+
+function openModal({ title, img }) {
+  if (modalTitle) modalTitle.textContent = title || '';
+  if (modalImg)   modalImg.src = img || '';
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden'; // prevent background scroll
+  // Reset button states in modal
+  modalLangButtons?.querySelectorAll('.lang-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+}
+
+function closeModal() {
+  modal.hidden = true;
+  document.body.style.overflow = '';
+  if (modalStatus) modalStatus.textContent = '';
+}
+
+// Clicks on cards -> open modal
+const gridEl = document.getElementById('image-grid');
+if (gridEl) {
+  gridEl.addEventListener('click', (e) => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    const title = card.querySelector('.title')?.textContent?.trim() || card.getAttribute('data-title') || 'Spot';
+    const img = card.querySelector('img')?.src || card.getAttribute('data-img') || '';
+    openModal({ title, img });
+  });
+}
+
+// Modal audio buttons
+if (modalLangButtons) {
+  modalLangButtons.addEventListener('click', (e) => {
+    const btn = e.target.closest('.lang-btn');
+    if (!btn) return;
+    const lang = btn.dataset.lang;
+    const title = modalTitle?.textContent || 'Spot';
+    // toggle pressed UI
+    modalLangButtons.querySelectorAll('.lang-btn').forEach(b => b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    playAudioFor(lang, title);
+  });
+}
+
+// Close modal (backdrop or ✕)
+if (modal) {
+  modal.addEventListener('click', (e) => {
+    if (e.target.dataset.close === 'true') closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!modal.hidden && e.key === 'Escape') closeModal();
+  });
+}
+
 // (optional) auto-init if JS loads after DOM
 document.addEventListener("DOMContentLoaded", () => {/* no-op */});

@@ -387,3 +387,46 @@ body {
   font-weight: 600; cursor: pointer;
 }
 .chip--light { background: #fff; }
+
+/* -------- Modal viewer -------- */
+.modal[hidden] { display: none !important; }
+.modal {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center;
+}
+.modal__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(15, 23, 42, .55);
+  backdrop-filter: blur(2px);
+}
+.modal__dialog {
+  position: relative;
+  width: min(980px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  padding: 16px 16px 22px;
+  animation: modal-in .18s ease-out;
+}
+@keyframes modal-in { from { transform: translateY(10px); opacity: 0 } to { transform: none; opacity: 1 } }
+
+.modal__close {
+  position: absolute; top: 10px; right: 10px;
+  border: none; background: rgba(0,0,0,.06);
+  width: 36px; height: 36px; border-radius: 10px;
+  font-size: 18px; cursor: pointer;
+}
+.modal__title {
+  margin: 6px 8px 10px;
+  font-size: 1.25rem; font-weight: 700; color: #111827;
+}
+.modal__image {
+  width: 100%; height: auto; border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+}
+.modal__controls {
+  margin-top: 14px;
+  background: rgba(255,255,255,.85);
+}

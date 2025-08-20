@@ -1,0 +1,41 @@
+{
+  "countries": [
+    {
+      "id": "turkey",
+      "name": "Turkey",
+      "flag": "🇹🇷",
+      "desc": "Istanbul, Ankara, Izmir, Bursa",
+      "bg": "assets/images/bg/turkey.jpg",
+      "cities": [
+        { "id": "istanbul", "name": "Istanbul", "detailsHref": "istanbulDetails.html" },
+        { "id": "ankara",   "name": "Ankara",   "detailsHref": null },
+        { "id": "izmir",    "name": "Izmir",    "detailsHref": null },
+        { "id": "bursa",    "name": "Bursa",    "detailsHref": null }
+      ]
+    },
+    {
+      "id": "uk",
+      "name": "United Kingdom",
+      "flag": "🇬🇧",
+      "desc": "Coming soon",
+      "bg": "assets/images/bg/uk.jpg",
+      "cities": []
+    },
+    {
+      "id": "uae",
+      "name": "UAE",
+      "flag": "🇦🇪",
+      "desc": "Coming soon",
+      "bg": "assets/images/bg/uae.jpg",
+      "cities": []
+    },
+    {
+      "id": "usa",
+      "name": "USA",
+      "flag": "🇺🇸",
+      "desc": "Coming soon",
+      "bg": "assets/images/bg/usa.jpg",
+      "cities": []
+    }
+  ]
+}
