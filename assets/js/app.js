@@ -5,7 +5,6 @@ const CITY_CONFIG = {
     {
       title: "Hagia Sophia",
       src: "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
-      // rolling gallery in the modal:
       gallery: [
         "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
         "assets/images/turkey/istanbul/hagiaSophia/2.jpg",
@@ -22,11 +21,11 @@ const CITY_CONFIG = {
       title: "Galata Tower",
       src: "assets/images/turkey/istanbul/galataTower/1.jpg",
       gallery: [
-              "assets/images/turkey/istanbul/galataTower/1.jpg",
-              "assets/images/turkey/istanbul/galataTower/2.jpg",
-              "assets/images/turkey/istanbul/galataTower/3.jpg",
-              "assets/images/turkey/istanbul/galataTower/4.jpg"
-            ],
+        "assets/images/turkey/istanbul/galataTower/1.jpg",
+        "assets/images/turkey/istanbul/galataTower/2.jpg",
+        "assets/images/turkey/istanbul/galataTower/3.jpg",
+        "assets/images/turkey/istanbul/galataTower/4.jpg"
+      ],
       audio: {
         English: "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
         Hindi:   "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
@@ -37,11 +36,11 @@ const CITY_CONFIG = {
       title: "Grand Bazaar",
       src: "assets/images/turkey/istanbul/grandBazaar/1.jpg",
       gallery: [
-                "assets/images/turkey/istanbul/grandBazaar/1.jpg",
-                "assets/images/turkey/istanbul/grandBazaar/2.jpg",
-                "assets/images/turkey/istanbul/grandBazaar/3.jpg",
-                "assets/images/turkey/istanbul/grandBazaar/4.jpg"
-                ],
+        "assets/images/turkey/istanbul/grandBazaar/1.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/2.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/3.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/4.jpg"
+      ],
       audio: {
         English: "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
         Hindi:   "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
@@ -52,11 +51,11 @@ const CITY_CONFIG = {
       title: "Bosphorous Bridge",
       src: "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
       gallery: [
-                  "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
-                  "assets/images/turkey/istanbul/bosphorousBridge/2.jpg",
-                  "assets/images/turkey/istanbul/bosphorousBridge/3.jpg",
-                  "assets/images/turkey/istanbul/bosphorousBridge/4.jpg"
-                ],
+        "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/2.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/3.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/4.jpg"
+      ],
       audio: {
         English: "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
         Hindi:   "assets/audio/turkey/istanbul/English_London_Bridge.mp3",
@@ -67,31 +66,33 @@ const CITY_CONFIG = {
 };
 
 // --- DOM refs (declare ONCE) ---
-const mainBtn    = document.getElementById("main-play-button");
-const gallery    = document.getElementById("gallery");
-const grid       = document.getElementById("image-grid");
-const preview    = document.getElementById("preview");
-const statusEl   = document.getElementById("status");
-const audio      = document.getElementById("audio-player");
-const langButtons= document.querySelectorAll(".lang-btn");
+const mainBtn     = document.getElementById("main-play-button");
+const gallery     = document.getElementById("gallery");
+const grid        = document.getElementById("image-grid");
+const preview     = document.getElementById("preview");
+const statusEl    = document.getElementById("status");
+const audio       = document.getElementById("audio-player");
+const langButtons = document.querySelectorAll(".lang-btn");
 
 // Modal + carousel refs (these exist in istanbulDetails.html)
 const modal           = document.getElementById('spot-modal');
 const modalTitle      = document.getElementById('modal-title');
 const modalStatus     = document.getElementById('modal-status');
 const modalLangBtns   = document.getElementById('modal-lang-buttons');
+const modalStopBtn    = document.getElementById('modal-stop-btn'); // ⏹ STOP (added)
 const carousel        = document.getElementById('carousel');
 const track           = document.getElementById('carousel-track');
 const dotsWrap        = document.getElementById('carousel-dots');
 
-let currentCard     = null;      // currently selected image card (grid)
-let currentLangBtn  = null;      // currently pressed bottom language button
+let currentCard            = null;   // currently selected image card (grid)
+let currentLangBtn         = null;   // currently pressed bottom language button
+let currentModalItem       = null;   // the spot item opened in modal
+let currentModalLangBtn    = null;   // active modal language button
 
 // For modal carousel:
-let currentModalItem = null;     // the spot item opened in modal
-let carouselTimer    = null;
-let carouselIndex    = 0;
-let carouselImages   = [];
+let carouselTimer = null;
+let carouselIndex = 0;
+let carouselImages = [];
 
 // --- helpers ---
 const setStatus     = (txt = "") => { if (statusEl) statusEl.textContent = txt; };
@@ -104,6 +105,18 @@ function resetLangButtons() {
     setIconPlay(btn.querySelector("svg.icon"));
   });
   currentLangBtn = null;
+}
+
+function resetModalButtons() {
+  if (!modalLangBtns) return;
+  modalLangBtns.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.remove("is-active");
+    b.setAttribute("aria-pressed", "false");
+    const ic = b.querySelector("svg.icon");
+    setIconPlay(ic);
+  });
+  currentModalLangBtn = null;
+  if (modalStatus) modalStatus.textContent = '';
 }
 
 function getAudioSrcFor(lang) {
@@ -150,7 +163,6 @@ function buildGrid() {
     card.appendChild(img);
     card.appendChild(title);
 
-    // click/keyboard select (for bottom preview flow)
     const select = () => selectCard(card);
     card.addEventListener("click", select);
     card.addEventListener("keydown", (e) => {
@@ -163,7 +175,6 @@ function buildGrid() {
     grid.appendChild(card);
   });
 
-  // Select first by default
   const firstCard = grid.querySelector(".card");
   if (firstCard) selectCard(firstCard);
 }
@@ -171,19 +182,14 @@ function buildGrid() {
 // --- bottom (page) lang button logic ---
 langButtons.forEach(btn => {
   btn.addEventListener("click", () => {
-    if (!audio) return;
-    if (!currentCard) return;
+    if (!audio || !currentCard) return;
 
     const lang = btn.dataset.lang;
     const src  = getAudioSrcFor(lang);
-    if (!src) {
-      setStatus(`Audio not available for ${lang}`);
-      return;
-    }
+    if (!src) { setStatus(`Audio not available for ${lang}`); return; }
 
     const icon = btn.querySelector("svg.icon");
 
-    // same button toggles pause/resume
     if (currentLangBtn === btn) {
       if (!audio.paused) {
         audio.pause();
@@ -200,7 +206,6 @@ langButtons.forEach(btn => {
       return;
     }
 
-    // switching language/source
     resetLangButtons();
     audio.src = src;
     audio.currentTime = 0;
@@ -214,21 +219,33 @@ langButtons.forEach(btn => {
   });
 });
 
-// --- audio state events ---
+// --- audio state events (apply to both bottom + modal UIs) ---
 if (audio) {
   audio.addEventListener("ended", () => {
+    // reset bottom
     if (currentLangBtn) {
       setIconPlay(currentLangBtn.querySelector("svg.icon"));
       currentLangBtn.setAttribute("aria-pressed", "false");
       currentLangBtn = null;
     }
+    // reset modal
+    resetModalButtons();
     setStatus("Playback finished");
   });
 
   audio.addEventListener("pause", () => {
-    if (!audio.ended && currentLangBtn) {
-      setIconPlay(currentLangBtn.querySelector("svg.icon"));
-      currentLangBtn.setAttribute("aria-pressed", "false");
+    if (!audio.ended) {
+      if (currentLangBtn) {
+        setIconPlay(currentLangBtn.querySelector("svg.icon"));
+        currentLangBtn.setAttribute("aria-pressed", "false");
+      }
+      if (currentModalLangBtn) {
+        const ic = currentModalLangBtn.querySelector("svg.icon");
+        setIconPlay(ic);
+        currentModalLangBtn.classList.remove("is-active");
+        currentModalLangBtn.setAttribute("aria-pressed","false");
+        if (modalStatus) modalStatus.textContent = "Paused";
+      }
       setStatus("Paused");
     }
   });
@@ -243,7 +260,6 @@ if (mainBtn) {
     buildGrid();
   });
 } else {
-  // If there's no main button (e.g., direct details page), auto-build the grid
   if (gallery && grid && grid.children.length === 0) {
     gallery.hidden = false;
     buildGrid();
@@ -254,11 +270,9 @@ if (mainBtn) {
    MODAL + CAROUSEL IMPLEMENTATION
    =============================== */
 
-// Build carousel slides + dots from an array of image URLs
 function buildCarousel(images) {
   if (!track || !dotsWrap) return;
 
-  // reset
   track.innerHTML = '';
   dotsWrap.innerHTML = '';
   carouselIndex = 0;
@@ -272,7 +286,6 @@ function buildCarousel(images) {
     return;
   }
 
-  // slides
   carouselImages.forEach((src, i) => {
     const slide = document.createElement('div');
     slide.className = 'carousel__slide';
@@ -282,7 +295,6 @@ function buildCarousel(images) {
     slide.appendChild(img);
     track.appendChild(slide);
 
-    // dot
     const dot = document.createElement('button');
     dot.className = 'carousel__dot' + (i === 0 ? ' is-active' : '');
     dot.addEventListener('click', () => goTo(i));
@@ -356,16 +368,13 @@ function openSpotModal(item) {
   if (!modal) return;
 
   if (modalTitle) modalTitle.textContent = item.title || 'Spot';
-
-  // Build carousel from item.gallery or fallback to single src
   const imgs = Array.isArray(item.gallery) && item.gallery.length ? item.gallery : [item.src];
   buildCarousel(imgs);
 
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
 
-  // Reset modal audio UI
-  modalLangBtns?.querySelectorAll('.lang-btn').forEach(b => b.setAttribute('aria-pressed','false'));
+  resetModalButtons();
   if (modalStatus) modalStatus.textContent = '';
 }
 
@@ -375,36 +384,69 @@ function closeModal() {
   modal.hidden = true;
   document.body.style.overflow = '';
   stopAuto();
-  if (modalStatus) modalStatus.textContent = '';
+  // stop/clear audio for modal context
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+  resetModalButtons();
 }
 
-// Modal audio buttons (play the clicked language for currentModalItem)
+// --- Modal audio buttons (play/pause toggle like bottom, per-language) ---
 if (modalLangBtns) {
   modalLangBtns.addEventListener('click', (e) => {
     if (!audio || !currentModalItem) return;
     const btn  = e.target.closest('.lang-btn');
     if (!btn) return;
+
     const lang = btn.dataset.lang;
     const src  = currentModalItem.audio?.[lang];
+    const icon = btn.querySelector("svg.icon");
+    if (!src) { if (modalStatus) modalStatus.textContent = `No audio for ${lang}`; return; }
 
-    if (!src) {
-      if (modalStatus) modalStatus.textContent = `No audio for ${lang}`;
+    // Toggle if same button
+    if (currentModalLangBtn === btn) {
+      if (!audio.paused) {
+        audio.pause();
+        setIconPlay(icon);
+        btn.classList.remove("is-active");
+        btn.setAttribute("aria-pressed","false");
+        if (modalStatus) modalStatus.textContent = "Paused";
+      } else {
+        audio.play().then(() => {
+          setIconPause(icon);
+          btn.classList.add("is-active");
+          btn.setAttribute("aria-pressed","true");
+          if (modalStatus) modalStatus.textContent = `Playing: ${currentModalItem.title} (${lang})`;
+        }).catch(()=>{ if (modalStatus) modalStatus.textContent = "Unable to play audio."; });
+      }
       return;
     }
 
-    // Visually toggle
-    modalLangBtns.querySelectorAll('.lang-btn').forEach(b => b.setAttribute('aria-pressed','false'));
-    btn.setAttribute('aria-pressed','true');
-
-    // Play
+    // Switching language/source
+    resetModalButtons();
     audio.pause();
     audio.src = src;
     audio.currentTime = 0;
     audio.play().then(() => {
+      setIconPause(icon);
+      btn.classList.add("is-active");
+      btn.setAttribute("aria-pressed","true");
+      currentModalLangBtn = btn;
       if (modalStatus) modalStatus.textContent = `Playing: ${currentModalItem.title} (${lang})`;
-    }).catch(() => {
-      if (modalStatus) modalStatus.textContent = `Unable to play audio.`;
-    });
+    }).catch(()=>{ if (modalStatus) modalStatus.textContent = "Unable to play audio."; });
+  });
+}
+
+// --- Modal STOP button (⏹) ---
+if (modalStopBtn) {
+  modalStopBtn.addEventListener('click', () => {
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.removeAttribute('src');
+    resetModalButtons();
+    if (modalStatus) modalStatus.textContent = 'Stopped';
   });
 }
 
@@ -429,7 +471,7 @@ if (grid) {
   });
 }
 
-// If the page loads without the main button (details page), ensure grid exists
+// Auto-build grid on details page if needed
 document.addEventListener("DOMContentLoaded", () => {
   if (!mainBtn && gallery && grid && grid.children.length === 0) {
     gallery.hidden = false;
