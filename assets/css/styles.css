@@ -234,6 +234,31 @@ body {
 .lang-btn:active { transform: translateY(0); }
 .icon { width: 20px; height: 20px; fill: white; pointer-events: none; }
 
+.country-list, .city-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.country-btn, .city-btn {
+  background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.country-btn:hover, .city-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
 #status {
   margin-top: 6px;
   color: #333;
@@ -248,3 +273,117 @@ body {
     flex-wrap: wrap;
   }
 }
+
+/* Compact hero for the landing page */
+.hero--compact { min-height: 32vh; }
+.hero__media--soft {
+  background-image:
+    linear-gradient(135deg, rgba(255,94,98,0.55), rgba(255,165,0,0.55)),
+    url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1600&auto=format&fit=crop');
+}
+
+/* Sections */
+.section { margin-top: 28px; }
+.section__title {
+  margin: 0 0 16px;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Country grid */
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 980px){ .country-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 560px){ .country-grid { grid-template-columns: 1fr; } }
+
+.country-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 16px;
+  text-align: left;
+  box-shadow: 0 12px 30px rgba(0,0,0,.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+.country-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.10); }
+
+.country-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(600px 200px at 100% 0, rgba(255,255,255,.35), transparent 45%);
+  pointer-events: none;
+}
+
+.country-card__flag {
+  width: 40px; height: 40px; line-height: 40px;
+  display: inline-grid; place-items: center;
+  border-radius: 50%;
+  font-size: 22px;
+  background: rgba(255,255,255,.8);
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
+
+.country-card__name { margin: 10px 0 4px; font-size: 1.15rem; font-weight: 700; color: #111827; }
+.country-card__desc { margin: 0 0 12px; color: #4b5563; font-size: .95rem; }
+
+.country-card__cta {
+  background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+  color: #fff; border: none; border-radius: 10px;
+  padding: 10px 14px; font-weight: 600; cursor: pointer;
+}
+.country-card__cta[disabled] { opacity: .6; cursor: not-allowed; }
+
+/* Subtle tints per country */
+.country-card--turkey  { background: linear-gradient(180deg, #fff, #fff8f5); }
+.country-card--uk      { background: linear-gradient(180deg, #fff, #f5f8ff); }
+.country-card--uae     { background: linear-gradient(180deg, #fff, #f6fff8); }
+.country-card--usa     { background: linear-gradient(180deg, #fff, #fff6f6); }
+
+/* Cities panel */
+.cities-panel {
+  margin-top: 22px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.8);
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.cities-panel--show { opacity: 1; transform: translateY(0); }
+
+.cities-panel__header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.city-list {
+  list-style: none; padding: 0; margin: 16px 0 4px;
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+}
+
+.city-pill {
+  display: inline-block;
+  background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+  color: #fff; text-decoration: none;
+  padding: 10px 16px; border-radius: 999px; font-weight: 600;
+  box-shadow: 0 8px 18px rgba(30,144,255,.18);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.city-pill:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(30,144,255,.22); }
+
+.chip {
+  border: 1px solid rgba(0,0,0,.08);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 600; cursor: pointer;
+}
+.chip--light { background: #fff; }

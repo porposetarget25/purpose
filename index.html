@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>START THE EXPLORATION</title>
+    <title>World Explorer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Styles -->
@@ -15,63 +15,128 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#0a3d62">
 </head>
-
 <body>
+
 <!-- HERO -->
-<header class="hero">
-    <div class="hero__media" aria-hidden="true"></div>
+<header class="hero hero--compact">
+    <div class="hero__media hero__media--soft" aria-hidden="true"></div>
     <div class="hero__overlay"></div>
 
     <div class="hero__content container">
-        <h1 class="hero__title">Explore Turkey</h1>
-        <p class="hero__tagline">From the Bosphorus breeze to Grand Bazaar alleys—start in Istanbul.</p>
-
-        <!-- Keep the same ID so existing JS works -->
-        <button class="cta" id="main-play-button" aria-controls="gallery" aria-expanded="false">
-            <svg class="cta__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-                <path d="M8 5v14l11-7z" fill="currentColor"/>
-            </svg>
-            <span>Enter the beautiful Istanbul</span>
-        </button>
-
-        <ul class="hero__highlights" aria-label="Trip highlights">
-            <li>Historic quarters</li>
-            <li>Iconic bridges</li>
-            <li>Street food trails</li>
-        </ul>
+        <h1 class="hero__title">World Explorer</h1>
+        <p class="hero__tagline">Choose a country to start exploring.</p>
     </div>
 </header>
 
-<!-- GALLERY (unchanged structure; just wrapped controls in a glass panel) -->
-<section id="gallery" class="gallery" hidden>
-    <!-- 4-image grid will be populated by JS -->
-    <div id="image-grid" class="image-grid" role="list"></div>
+<main class="container">
 
-    <div class="details container">
-        <img id="preview" alt="" class="preview" />
+    <!-- Countries -->
+    <section class="section">
+        <h2 class="section__title">Select a Country</h2>
 
-        <div class="glass-panel">
-            <div class="lang-buttons" role="group" aria-label="Language audio controls">
-                <button class="lang-btn" data-lang="English" aria-pressed="false">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    English
-                </button>
-                <button class="lang-btn" data-lang="Hindi" aria-pressed="false">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    Hindi
-                </button>
-                <button class="lang-btn" data-lang="Chinese" aria-pressed="false">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    Chinese
-                </button>
-            </div>
-            <div id="status" aria-live="polite"></div>
+        <div class="country-grid">
+            <!-- TURKEY -->
+            <article class="country-card country-card--turkey" data-country="turkey">
+                <div class="country-card__flag">🇹🇷</div>
+                <h3 class="country-card__name">Turkey</h3>
+                <p class="country-card__desc">Istanbul, Ankara, Izmir, Bursa</p>
+                <button class="country-card__cta" type="button">View cities</button>
+            </article>
+
+            <!-- UK -->
+            <article class="country-card country-card--uk" data-country="uk">
+                <div class="country-card__flag">🇬🇧</div>
+                <h3 class="country-card__name">United Kingdom</h3>
+                <p class="country-card__desc">Coming soon</p>
+                <button class="country-card__cta" type="button" disabled>Coming soon</button>
+            </article>
+
+            <!-- UAE -->
+            <article class="country-card country-card--uae" data-country="uae">
+                <div class="country-card__flag">🇦🇪</div>
+                <h3 class="country-card__name">UAE</h3>
+                <p class="country-card__desc">Coming soon</p>
+                <button class="country-card__cta" type="button" disabled>Coming soon</button>
+            </article>
+
+            <!-- USA -->
+            <article class="country-card country-card--usa" data-country="usa">
+                <div class="country-card__flag">🇺🇸</div>
+                <h3 class="country-card__name">USA</h3>
+                <p class="country-card__desc">Coming soon</p>
+                <button class="country-card__cta" type="button" disabled>Coming soon</button>
+            </article>
         </div>
-    </div>
+    </section>
 
-    <audio id="audio-player" preload="none"></audio>
-</section>
+    <!-- Cities panel (appears only after clicking Turkey) -->
+    <section id="cities" class="cities-panel" hidden>
+        <div class="cities-panel__header">
+            <h2 class="section__title">Cities in <span id="country-name">Turkey</span></h2>
+            <button class="chip chip--light" id="close-cities" type="button">Close</button>
+        </div>
 
-<script src="assets/js/app.js" defer></script>
+        <ul class="city-list" id="city-list">
+            <!-- Filled by JS -->
+        </ul>
+    </section>
+</main>
+
+<!-- Inline, page-specific JS -->
+<script>
+    const citiesByCountry = {
+      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa"]
+    };
+
+    const countryCards = document.querySelectorAll(".country-card");
+    const citiesPanel   = document.getElementById("cities");
+    const cityList      = document.getElementById("city-list");
+    const countryNameEl = document.getElementById("country-name");
+    const closeBtn      = document.getElementById("close-cities");
+
+    function showCities(countryKey, countryLabel){
+      const arr = citiesByCountry[countryKey] || [];
+      countryNameEl.textContent = countryLabel;
+      cityList.innerHTML = "";
+
+      arr.forEach(city => {
+        const li = document.createElement("li");
+        const btn = document.createElement("a");
+        btn.className = "city-pill";
+        btn.textContent = city;
+
+        if (city === "Istanbul") {
+          btn.href = "istanbulDetails.html";
+        } else {
+          btn.href = "javascript:void(0)";
+          btn.addEventListener("click", () => alert(`${city} page coming soon!`));
+        }
+
+        li.appendChild(btn);
+        cityList.appendChild(li);
+      });
+
+      citiesPanel.hidden = false;
+      citiesPanel.classList.add("cities-panel--show");
+      citiesPanel.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    countryCards.forEach(card => {
+      card.addEventListener("click", () => {
+        const key = card.dataset.country;
+        const label = card.querySelector(".country-card__name").textContent;
+        if (!citiesByCountry[key]) {
+          alert(`${label} coming soon!`);
+          return;
+        }
+        showCities(key, label);
+      });
+    });
+
+    closeBtn.addEventListener("click", () => {
+      citiesPanel.classList.remove("cities-panel--show");
+      setTimeout(() => { citiesPanel.hidden = true; }, 250);
+    });
+</script>
 </body>
 </html>

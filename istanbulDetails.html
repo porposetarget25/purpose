@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Discover Istanbul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Styles -->
+    <link rel="preload" href="assets/css/styles.css" as="style" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- Fonts & theme (same as index) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0a3d62">
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+        <h1 class="hero__title">Discover Istanbul</h1>
+        <p class="hero__tagline">Where East meets West on the Bosphorus.</p>
+
+        <!-- Keep the same ID so existing JS works -->
+        <button class="cta" id="main-play-button" aria-controls="gallery" aria-expanded="false">
+            <svg class="cta__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path d="M8 5v14l11-7z" fill="currentColor"/>
+            </svg>
+            <span>Enter the beautiful Istanbul</span>
+        </button>
+    </div>
+</header>
+
+<!-- GALLERY (hidden until button is clicked; app.js reveals & builds it) -->
+<section id="gallery" class="gallery" hidden>
+    <!-- 4-image grid will be populated by JS -->
+    <div id="image-grid" class="image-grid" role="list"></div>
+
+    <div class="details container">
+        <img id="preview" alt="" class="preview" />
+
+        <div class="glass-panel">
+            <div class="lang-buttons" role="group" aria-label="Language audio controls">
+                <button class="lang-btn" data-lang="English" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    English
+                </button>
+                <button class="lang-btn" data-lang="Hindi" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Hindi
+                </button>
+                <button class="lang-btn" data-lang="Chinese" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Chinese
+                </button>
+            </div>
+            <div id="status" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <audio id="audio-player" preload="none"></audio>
+</section>
+
+<main class="container" style="margin-top:16px">
+    <a href="index.html">⬅ Back to Countries</a>
+</main>
+
+<!-- Your existing gallery/audio logic -->
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>
