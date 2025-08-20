@@ -76,7 +76,21 @@
 
         <h3 id="modal-title" class="modal__title"></h3>
 
-        <img id="modal-image" alt="" class="modal__image" />
+        <!-- Carousel -->
+        <div class="carousel" id="carousel">
+            <button class="carousel__nav carousel__nav--prev" type="button" aria-label="Previous" data-prev>‹</button>
+
+            <div class="carousel__viewport">
+                <div class="carousel__track" id="carousel-track">
+                    <!-- slides injected by JS -->
+                </div>
+            </div>
+
+            <button class="carousel__nav carousel__nav--next" type="button" aria-label="Next" data-next>›</button>
+
+            <div class="carousel__dots" id="carousel-dots"><!-- dots injected --></div>
+        </div>
+
 
         <!-- Audio controls INSIDE the modal (re-using your styles) -->
         <div class="glass-panel modal__controls">
