@@ -43,6 +43,14 @@
                 <button class="country-card__cta" type="button">View cities</button>
             </article>
 
+            <!-- INDIA -->
+            <article class="country-card country-card--india" data-country="india">
+                <div class="country-card__flag">🇮🇳</div>
+                <h3 class="country-card__name">India</h3>
+                <p class="country-card__desc">Amritsar, Mumbai, New Delhi, Kolkata</p>
+                <button class="country-card__cta" type="button">View cities</button>
+            </article>
+
             <!-- UK -->
             <article class="country-card country-card--uk" data-country="uk">
                 <div class="country-card__flag">🇬🇧</div>
@@ -69,23 +77,22 @@
         </div>
     </section>
 
-    <!-- Cities panel (appears only after clicking Turkey) -->
+    <!-- Cities panel -->
     <section id="cities" class="cities-panel" hidden>
         <div class="cities-panel__header">
-            <h2 class="section__title">Cities in <span id="country-name">Turkey</span></h2>
+            <h2 class="section__title">Cities in <span id="country-name">Country</span></h2>
             <button class="chip chip--light" id="close-cities" type="button">Close</button>
         </div>
 
-        <ul class="city-list" id="city-list">
-            <!-- Filled by JS -->
-        </ul>
+        <ul class="city-list" id="city-list"><!-- Filled by JS --></ul>
     </section>
 </main>
 
 <!-- Inline, page-specific JS -->
 <script>
     const citiesByCountry = {
-      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa"]
+      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa"],
+      india: ["Amritsar", "Mumbai", "New Delhi", "Kolkata"]
     };
 
     const countryCards = document.querySelectorAll(".country-card");
@@ -105,8 +112,11 @@
         btn.className = "city-pill";
         btn.textContent = city;
 
-        if (city === "Istanbul") {
+        // Active city routing
+        if (countryKey === "turkey" && city === "Istanbul") {
           btn.href = "istanbulDetails.html";
+        } else if (countryKey === "india" && city === "Amritsar") {
+          btn.href = "amritsarDetails.html";
         } else {
           btn.href = "javascript:void(0)";
           btn.addEventListener("click", () => alert(`${city} page coming soon!`));

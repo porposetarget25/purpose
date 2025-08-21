@@ -1,0 +1,65 @@
+{
+  "city": "Istanbul, Turkey",
+  "images": [
+    {
+      "title": "Hagia Sophia",
+      "src": "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
+      "gallery": [
+        "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
+        "assets/images/turkey/istanbul/hagiaSophia/2.jpg",
+        "assets/images/turkey/istanbul/hagiaSophia/3.jpg",
+        "assets/images/turkey/istanbul/hagiaSophia/4.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Hindi":   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Chinese": "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+      }
+    },
+    {
+      "title": "Galata Tower",
+      "src": "assets/images/turkey/istanbul/galataTower/1.jpg",
+      "gallery": [
+        "assets/images/turkey/istanbul/galataTower/1.jpg",
+        "assets/images/turkey/istanbul/galataTower/2.jpg",
+        "assets/images/turkey/istanbul/galataTower/3.jpg",
+        "assets/images/turkey/istanbul/galataTower/4.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Hindi":   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Chinese": "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+      }
+    },
+    {
+      "title": "Grand Bazaar",
+      "src": "assets/images/turkey/istanbul/grandBazaar/1.jpg",
+      "gallery": [
+        "assets/images/turkey/istanbul/grandBazaar/1.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/2.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/3.jpg",
+        "assets/images/turkey/istanbul/grandBazaar/4.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Hindi":   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Chinese": "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+      }
+    },
+    {
+      "title": "Bosphorous Bridge",
+      "src": "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
+      "gallery": [
+        "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/2.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/3.jpg",
+        "assets/images/turkey/istanbul/bosphorousBridge/4.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Hindi":   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+        "Chinese": "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+      }
+    }
+  ]
+}

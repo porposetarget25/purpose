@@ -1,0 +1,59 @@
+{
+  "city": "Amritsar, India",
+  "images": [
+    {
+      "title": "Golden Temple",
+      "src": "assets/images/india/amritsar/goldenTemple/1.jpg",
+      "gallery": [
+        "assets/images/india/amritsar/goldenTemple/1.jpg",
+        "assets/images/india/amritsar/goldenTemple/2.jpg",
+        "assets/images/india/amritsar/goldenTemple/3.jpg",
+        "assets/images/india/amritsar/goldenTemple/4.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/india/amritsar/goldenTemple.mp3",
+        "Hindi":   "assets/audio/india/amritsar/goldenTemple.mp3",
+        "Chinese": "assets/audio/india/amritsar/goldenTemple.mp3"
+      }
+    },
+    {
+      "title": "Jallianwala Bagh",
+      "src": "assets/images/india/amritsar/jallianwala/1.jpg",
+      "gallery": [
+        "assets/images/india/amritsar/jallianwala/1.jpg",
+        "assets/images/india/amritsar/jallianwala/2.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/india/amritsar/English_Jallianwala.mp3",
+        "Hindi":   "assets/audio/india/amritsar/Hindi_Jallianwala.mp3",
+        "Chinese": "assets/audio/india/amritsar/Chinese_Jallianwala.mp3"
+      }
+    },
+    {
+      "title": "Wagah Border",
+      "src": "assets/images/india/amritsar/wagah/1.jpg",
+      "gallery": [
+        "assets/images/india/amritsar/wagah/1.jpg",
+        "assets/images/india/amritsar/wagah/2.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/india/amritsar/English_Wagah.mp3",
+        "Hindi":   "assets/audio/india/amritsar/Hindi_Wagah.mp3",
+        "Chinese": "assets/audio/india/amritsar/Chinese_Wagah.mp3"
+      }
+    },
+    {
+      "title": "Hall Bazaar",
+      "src": "assets/images/india/amritsar/hallBazaar/1.jpg",
+      "gallery": [
+        "assets/images/india/amritsar/hallBazaar/1.jpg",
+        "assets/images/india/amritsar/hallBazaar/2.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/india/amritsar/English_HallBazaar.mp3",
+        "Hindi":   "assets/audio/india/amritsar/Hindi_HallBazaar.mp3",
+        "Chinese": "assets/audio/india/amritsar/Chinese_HallBazaar.mp3"
+      }
+    }
+  ]
+}
