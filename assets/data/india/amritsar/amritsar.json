@@ -27,8 +27,8 @@
       ],
       "audio": {
         "English": "assets/audio/india/amritsar/English_Jallianwala.mp3",
-        "Hindi":   "assets/audio/india/amritsar/Hindi_Jallianwala.mp3",
-        "Chinese": "assets/audio/india/amritsar/Chinese_Jallianwala.mp3"
+        "Hindi":   "assets/audio/india/amritsar/English_Jallianwala.mp3",
+        "Chinese": "assets/audio/india/amritsar/English_Jallianwala.mp3"
       }
     },
     {
@@ -42,8 +42,8 @@
       ],
       "audio": {
         "English": "assets/audio/india/amritsar/English_Wagah.mp3",
-        "Hindi":   "assets/audio/india/amritsar/Hindi_Wagah.mp3",
-        "Chinese": "assets/audio/india/amritsar/Chinese_Wagah.mp3"
+        "Hindi":   "assets/audio/india/amritsar/English_Wagah.mp3",
+        "Chinese": "assets/audio/india/amritsar/English_Wagah.mp3"
       }
     },
     {
@@ -56,9 +56,9 @@
         "assets/images/india/amritsar/hallBazaar/4.jpg"
       ],
       "audio": {
-        "English": "assets/audio/india/amritsar/English_HallBazaar.mp3",
+        "English": "assets/audio/india/amritsar/Hindi_HallBazaar.mp3",
         "Hindi":   "assets/audio/india/amritsar/Hindi_HallBazaar.mp3",
-        "Chinese": "assets/audio/india/amritsar/Chinese_HallBazaar.mp3"
+        "Chinese": "assets/audio/india/amritsar/Hindi_HallBazaar.mp3"
       }
     }
   ]
