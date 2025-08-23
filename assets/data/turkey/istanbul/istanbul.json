@@ -3,12 +3,12 @@
   "images": [
     {
       "title": "Hagia Sophia",
-      "src": "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
+      "src": "assets/images/turkey/istanbul/hagiaSophia/1.avif",
       "gallery": [
         "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
-        "assets/images/turkey/istanbul/hagiaSophia/2.jpg",
-        "assets/images/turkey/istanbul/hagiaSophia/3.jpg",
-        "assets/images/turkey/istanbul/hagiaSophia/4.jpg"
+        "assets/images/turkey/istanbul/hagiaSophia/2.avif",
+        "assets/images/turkey/istanbul/hagiaSophia/3.avif",
+        "assets/images/turkey/istanbul/hagiaSophia/4.avif"
       ],
       "audio": {
         "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
