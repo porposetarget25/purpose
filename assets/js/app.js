@@ -1,95 +1,112 @@
 /* =========================================================
    City Config Bootstrap (reusable JS for any city page)
    - If <body data-config="...json"> is present → fetch JSON
+   - If fetch fails and data-config exists → show warning, no fallback
    - Else fallback to hardcoded Istanbul config
    - Then init the app with the final CITY_CONFIG
    ========================================================= */
 
 (async function bootstrapCityConfig() {
-  // If another script defined CITY_CONFIG already, keep it.
-  if (typeof window.CITY_CONFIG === "undefined" || !window.CITY_CONFIG) {
-    const url = document.body?.dataset?.config;
-    if (url) {
-      try {
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to fetch ${url}`);
-        window.CITY_CONFIG = await res.json();
-      } catch (err) {
-        console.error("Failed to load city config from data-config:", err);
+  const hasDataConfig = !!document.body?.dataset?.config;
+
+  // If already defined elsewhere, use it.
+  if (typeof window.CITY_CONFIG !== "undefined" && window.CITY_CONFIG) {
+    initApp();
+    return;
+  }
+
+  // Try to load from data-config if present.
+  if (hasDataConfig) {
+    try {
+      const url = document.body.dataset.config;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Failed to fetch ${url} (${res.status})`);
+      window.CITY_CONFIG = await res.json();
+      initApp();
+      return;
+    } catch (err) {
+      console.error("Failed to load city config from data-config:", err);
+      // Friendly message (no silent fallback to Istanbul if data-config exists)
+      const gallery = document.getElementById("gallery");
+      if (gallery) {
+        gallery.hidden = false;
+        gallery.innerHTML = `
+          <div style="padding:16px; background:#fff3cd; border:1px solid #ffeeba; border-radius:12px;">
+            Could not load city data from <code>${document.body.dataset.config}</code>.<br/>
+            Please check the path and serve via http(s).
+          </div>`;
       }
+      return;
     }
   }
 
-  // Fallback (optional): keep your old hardcoded Istanbul config if nothing loaded.
-  if (typeof window.CITY_CONFIG === "undefined" || !window.CITY_CONFIG) {
-    window.CITY_CONFIG = {
-      city: "Istanbul, Turkey",
-      images: [
-        {
-          title: "Hagia Sophia",
-          src: "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
-          gallery: [
-            "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
-            "assets/images/turkey/istanbul/hagiaSophia/2.jpg",
-            "assets/images/turkey/istanbul/hagiaSophia/3.jpg",
-            "assets/images/turkey/istanbul/hagiaSophia/4.jpg"
-          ],
-          audio: {
-            English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
-          }
-        },
-        {
-          title: "Galata Tower",
-          src: "assets/images/turkey/istanbul/galataTower/1.jpg",
-          gallery: [
-            "assets/images/turkey/istanbul/galataTower/1.jpg",
-            "assets/images/turkey/istanbul/galataTower/2.jpg",
-            "assets/images/turkey/istanbul/galataTower/3.jpg",
-            "assets/images/turkey/istanbul/galataTower/4.jpg"
-          ],
-          audio: {
-            English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
-          }
-        },
-        {
-          title: "Grand Bazaar",
-          src: "assets/images/turkey/istanbul/grandBazaar/1.jpg",
-          gallery: [
-            "assets/images/turkey/istanbul/grandBazaar/1.jpg",
-            "assets/images/turkey/istanbul/grandBazaar/2.jpg",
-            "assets/images/turkey/istanbul/grandBazaar/3.jpg",
-            "assets/images/turkey/istanbul/grandBazaar/4.jpg"
-          ],
-          audio: {
-            English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
-          }
-        },
-        {
-          title: "Bosphorous Bridge",
-          src: "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
-          gallery: [
-            "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
-            "assets/images/turkey/istanbul/bosphorousBridge/2.jpg",
-            "assets/images/turkey/istanbul/bosphorousBridge/3.jpg",
-            "assets/images/turkey/istanbul/bosphorousBridge/4.jpg"
-          ],
-          audio: {
-            English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
-            Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
-          }
+  // No data-config → fallback for local dev.
+  window.CITY_CONFIG = {
+    city: "Istanbul, Turkey",
+    images: [
+      {
+        title: "Hagia Sophia",
+        src: "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
+        gallery: [
+          "assets/images/turkey/istanbul/hagiaSophia/1.jpg",
+          "assets/images/turkey/istanbul/hagiaSophia/2.jpg",
+          "assets/images/turkey/istanbul/hagiaSophia/3.jpg",
+          "assets/images/turkey/istanbul/hagiaSophia/4.jpg"
+        ],
+        audio: {
+          English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
         }
-      ]
-    };
-  }
+      },
+      {
+        title: "Galata Tower",
+        src: "assets/images/turkey/istanbul/galataTower/1.jpg",
+        gallery: [
+          "assets/images/turkey/istanbul/galataTower/1.jpg",
+          "assets/images/turkey/istanbul/galataTower/2.jpg",
+          "assets/images/turkey/istanbul/galataTower/3.jpg",
+          "assets/images/turkey/istanbul/galataTower/4.jpg"
+        ],
+        audio: {
+          English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+        }
+      },
+      {
+        title: "Grand Bazaar",
+        src: "assets/images/turkey/istanbul/grandBazaar/1.jpg",
+        gallery: [
+          "assets/images/turkey/istanbul/grandBazaar/1.jpg",
+          "assets/images/turkey/istanbul/grandBazaar/2.jpg",
+          "assets/images/turkey/istanbul/grandBazaar/3.jpg",
+          "assets/images/turkey/istanbul/grandBazaar/4.jpg"
+        ],
+        audio: {
+          English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+        }
+      },
+      {
+        title: "Bosphorous Bridge",
+        src: "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
+        gallery: [
+          "assets/images/turkey/istanbul/bosphorousBridge/1.jpg",
+          "assets/images/turkey/istanbul/bosphorousBridge/2.jpg",
+          "assets/images/turkey/istanbul/bosphorousBridge/3.jpg",
+          "assets/images/turkey/istanbul/bosphorousBridge/4.jpg"
+        ],
+        audio: {
+          English: "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Hindi:   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
+          Chinese: "assets/audio/turkey/istanbul/hagia-sophia.mp3"
+        }
+      }
+    ]
+  };
 
-  // Now that CITY_CONFIG is ready, initialize the app.
   initApp();
 })();
 
@@ -112,6 +129,16 @@ function initApp() {
   const audio       = document.getElementById("audio-player");
   const langButtons = document.querySelectorAll(".lang-btn");
 
+  // Optional page loader (add #page-loader in HTML to use)
+  const pageLoader = document.getElementById("page-loader");
+  const showLoader = (msg = "Loading…") => {
+    if (pageLoader) {
+      pageLoader.hidden = false;
+      pageLoader.querySelector(".loader__text")?.replaceChildren(document.createTextNode(msg));
+    }
+  };
+  const hideLoader = () => { if (pageLoader) pageLoader.hidden = true; };
+
   // Page-level STOP (optional, may not exist on every page)
   const pageStopBtn = document.getElementById("page-stop-btn");
 
@@ -125,9 +152,9 @@ function initApp() {
   const track           = document.getElementById('carousel-track');
   const dotsWrap        = document.getElementById('carousel-dots');
 
-  let currentCard            = null;   // currently selected image card (grid)
+  let currentCard            = null;   // selected image card (grid)
   let currentLangBtn         = null;   // active bottom language button
-  let currentModalItem       = null;   // the spot item opened in modal
+  let currentModalItem       = null;   // spot item opened in modal
   let currentModalLangBtn    = null;   // active modal language button
 
   // For modal carousel:
@@ -170,6 +197,11 @@ function initApp() {
     currentCard = cardEl;
     const idx   = Number(cardEl.dataset.index);
     const item  = CITY.images[idx];
+
+    // highlight selected card
+    grid?.querySelectorAll('.card').forEach(c => c.classList.remove('is-selected'));
+    cardEl.classList.add('is-selected');
+
     if (preview) {
       preview.src = item.src;
       preview.alt = item.title;
@@ -182,13 +214,28 @@ function initApp() {
     }
   }
 
-  // --- build 4-card grid ---
-  function buildGrid() {
+  // image preloader
+  async function preload(src) {
+    await new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => res();
+      img.onerror = rej;
+      img.src = src;
+    });
+  }
+
+  // --- build 4-card grid (animated) ---
+  async function buildGrid() {
     if (!grid) return;
     grid.innerHTML = "";
+
+    // Preload first preview image to avoid pop-in
+    const first = CITY.images[0];
+    if (first?.src) { try { await preload(first.src); } catch {} }
+
     CITY.images.slice(0, 4).forEach((item, i) => {
       const card = document.createElement("article");
-      card.className = "card";
+      card.className = "card fade-up";
       card.tabIndex  = 0;
       card.dataset.index = i;
 
@@ -216,6 +263,14 @@ function initApp() {
       grid.appendChild(card);
     });
 
+    // Animate cards in
+    requestAnimationFrame(() => {
+      grid.querySelectorAll('.fade-up').forEach((el, idx) => {
+        el.style.setProperty('--stagger', `${idx * 40}ms`);
+        el.classList.add('is-in');
+      });
+    });
+
     const firstCard = grid.querySelector(".card");
     if (firstCard) selectCard(firstCard);
   }
@@ -231,6 +286,7 @@ function initApp() {
 
       const icon = btn.querySelector("svg.icon");
 
+      // toggle if same button
       if (currentLangBtn === btn) {
         if (!audio.paused) {
           audio.pause();
@@ -247,6 +303,7 @@ function initApp() {
         return;
       }
 
+      // switching language/source
       resetLangButtons();
       audio.src = src;
       audio.currentTime = 0;
@@ -275,13 +332,11 @@ function initApp() {
   // --- audio state events (apply to both bottom + modal UIs) ---
   if (audio) {
     audio.addEventListener("ended", () => {
-      // reset bottom
       if (currentLangBtn) {
         setIconPlay(currentLangBtn.querySelector("svg.icon"));
         currentLangBtn.setAttribute("aria-pressed", "false");
         currentLangBtn = null;
       }
-      // reset modal
       resetModalButtons();
       setStatus("Playback finished");
     });
@@ -307,16 +362,18 @@ function initApp() {
   // --- main button reveal (landing-style behavior) ---
   if (mainBtn) {
     mainBtn.addEventListener("click", () => {
+      showLoader("Preparing gallery…");
       mainBtn.setAttribute("aria-expanded", "true");
       mainBtn.style.display = "none";
       if (gallery) gallery.hidden = false;
-      buildGrid();
+      Promise.resolve(buildGrid()).finally(hideLoader);
     });
   } else {
     // If page has no main button (direct details page), auto-build grid
     if (gallery && grid && grid.children.length === 0) {
+      showLoader("Loading gallery…");
       gallery.hidden = false;
-      buildGrid();
+      Promise.resolve(buildGrid()).finally(hideLoader);
     }
   }
 
@@ -416,10 +473,13 @@ function initApp() {
     startX = null; startAuto();
   });
 
-  // Open modal for a given spot item
-  function openSpotModal(item) {
+  // Open modal for a given spot item (preload first slide)
+  async function openSpotModal(item) {
     currentModalItem = item;
     if (!modal) return;
+
+    const firstSrc = (Array.isArray(item.gallery) && item.gallery[0]) || item.src;
+    try { if (firstSrc) await preload(firstSrc); } catch {}
 
     if (modalTitle) modalTitle.textContent = item.title || 'Spot';
     const imgs = Array.isArray(item.gallery) && item.gallery.length ? item.gallery : [item.src];
@@ -438,7 +498,6 @@ function initApp() {
     modal.hidden = true;
     document.body.style.overflow = '';
     stopAuto();
-    // stop/clear audio for modal context
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
@@ -458,7 +517,6 @@ function initApp() {
       const icon = btn.querySelector("svg.icon");
       if (!src) { if (modalStatus) modalStatus.textContent = `No audio for ${lang}`; return; }
 
-      // Toggle if same button
       if (currentModalLangBtn === btn) {
         if (!audio.paused) {
           audio.pause();
@@ -477,7 +535,6 @@ function initApp() {
         return;
       }
 
-      // Switching language/source
       resetModalButtons();
       audio.pause();
       audio.src = src;
@@ -528,8 +585,9 @@ function initApp() {
   // Auto-build grid on details page if needed
   document.addEventListener("DOMContentLoaded", () => {
     if (!mainBtn && gallery && grid && grid.children.length === 0) {
+      showLoader("Loading gallery…");
       gallery.hidden = false;
-      buildGrid();
+      Promise.resolve(buildGrid()).finally(hideLoader);
     }
   });
 }
