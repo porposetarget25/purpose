@@ -447,6 +447,100 @@ body {
   text-shadow: 0 2px 10px rgba(0,0,0,.35);
 }
 
+/* Nearby chips */
+.nearby { margin-top: 12px; text-align: center; }
+.nearby__title { margin: 0 0 8px; font-size: 1rem; color: #374151; }
+.nearby__chips {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.chip--link {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.chip--link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+}
+
+/* ===== Nearby (modal) ===== */
+.nearby {
+  margin-top: 14px;
+  padding: 18px 16px 10px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.nearby__title {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #334155;
+}
+
+.nearby__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Generic “chip” style (reused for the links) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 8px 20px rgba(2, 8, 23, 0.06);
+  color: #0f172a;
+  font-weight: 700;
+  letter-spacing: .2px;
+  text-decoration: none;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+
+/* Links specifically */
+.chip--link:hover {
+  transform: translateY(-2px);
+  border-color: rgba(30, 144, 255, 0.35);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.9) inset,
+    0 12px 26px rgba(2, 8, 23, 0.10);
+}
+
+.chip--link:active {
+  transform: translateY(0);
+}
+
+.chip--link:focus-visible {
+  outline: 0;
+  box-shadow:
+    0 0 0 3px rgba(30, 144, 255, .15),
+    0 10px 24px rgba(2, 8, 23, 0.12);
+  border-color: rgba(30, 144, 255, 0.65);
+}
+
+/* Compact on small screens */
+@media (max-width: 480px) {
+  .chip { height: 38px; padding: 0 14px; }
+  .nearby { padding: 16px 12px 8px; }
+}
 
 
 

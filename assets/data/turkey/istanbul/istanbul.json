@@ -18,7 +18,9 @@
         "English": "assets/audio/turkey/istanbul/hagia-sophia.mp3",
         "Hindi":   "assets/audio/turkey/istanbul/hagia-sophia.mp3",
         "Chinese": "assets/audio/turkey/istanbul/hagia-sophia.mp3"
-      }
+      },
+      "coords": { "lat": 41.0086, "lng": 28.9802 },
+      "placeQuery": "Hagia Sophia, Istanbul"
     },
     {
       "title": "Galata Tower",

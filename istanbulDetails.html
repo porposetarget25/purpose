@@ -27,7 +27,6 @@
     </div>
 </header>
 
-
 <!-- GALLERY -->
 <section id="gallery" class="gallery" hidden>
     <div id="image-grid" class="image-grid" role="list"></div>
@@ -95,6 +94,13 @@
                     <svg class="icon" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Stop
                 </button>
             </div>
+
+            <!-- Nearby links -->
+            <div class="nearby">
+                <h4 class="nearby__title">Nearby</h4>
+                <div id="nearby-links" class="nearby__chips"></div>
+            </div>
+
             <div id="modal-status" aria-live="polite"></div>
         </div>
     </div>
@@ -105,6 +111,7 @@
 
 <script src="assets/js/app.js" defer></script>
 </body>
+
 <!-- Page Loader -->
 <div id="page-loader" class="loader" aria-live="polite" aria-busy="true" hidden>
     <div class="loader__spinner" role="status" aria-label="Loading"></div>

@@ -151,6 +151,8 @@ function initApp() {
   const carousel        = document.getElementById('carousel');
   const track           = document.getElementById('carousel-track');
   const dotsWrap        = document.getElementById('carousel-dots');
+  // ✅ NEW: wrapper for Nearby chips
+  const nearbyLinksWrap = document.getElementById('nearby-links');
 
   let currentCard            = null;   // selected image card (grid)
   let currentLangBtn         = null;   // active bottom language button
@@ -474,16 +476,16 @@ function initApp() {
   });
 
   // Open modal for a given spot item (preload first slide)
-  async function openSpotModal(item) {
+  function openSpotModal(item) {
     currentModalItem = item;
     if (!modal) return;
-
-    const firstSrc = (Array.isArray(item.gallery) && item.gallery[0]) || item.src;
-    try { if (firstSrc) await preload(firstSrc); } catch {}
 
     if (modalTitle) modalTitle.textContent = item.title || 'Spot';
     const imgs = Array.isArray(item.gallery) && item.gallery.length ? item.gallery : [item.src];
     buildCarousel(imgs);
+
+    // Nearby chips (optional)
+    buildNearbyLinks(item);
 
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -590,4 +592,44 @@ function initApp() {
       Promise.resolve(buildGrid()).finally(hideLoader);
     }
   });
+
+  // ---------- Nearby links builder ----------
+  function buildNearbyLinks(item) {
+    if (!nearbyLinksWrap) return;
+
+    const cityName = (window.CITY_CONFIG?.city || "").split(",")[0]?.trim() || "";
+    const place = item.placeQuery || `${item.title}${cityName ? " " + cityName : ""}`;
+    const qPlace = encodeURIComponent(place);
+
+    const hasCoords =
+      item.coords && typeof item.coords.lat === 'number' && typeof item.coords.lng === 'number';
+    const at = hasCoords ? `@${item.coords.lat},${item.coords.lng},16z/` : '';
+
+    const categories = [
+      { label: "Restaurants",    query: "restaurants" },
+      { label: "Cafes",          query: "cafes" },
+      { label: "Street food",    query: "street food" },
+      { label: "Souvenir shops", query: "souvenir shops" },
+      { label: "Pharmacies",     query: "pharmacies" },
+      { label: "ATMs",           query: "ATMs" },
+      { label: "Shopping",       query: "shopping" },
+      { label: "Get directions", query: "directions" }
+    ];
+
+    const html = categories.map(cat => {
+      if (cat.query === "directions") {
+        const href = hasCoords
+          ? `https://www.google.com/maps/dir/${at}`
+          : `https://www.google.com/maps/dir/?api=1&destination=${qPlace}`;
+        return `<a class="chip chip--link" target="_blank" rel="noopener" href="${href}">${cat.label}</a>`;
+      }
+      const qType = encodeURIComponent(cat.query);
+      const href = hasCoords
+        ? `https://www.google.com/maps/search/${qType}/${at}`
+        : `https://www.google.com/maps/search/${qType}+near+${qPlace}`;
+      return `<a class="chip chip--link" target="_blank" rel="noopener" href="${href}">${cat.label}</a>`;
+    }).join("");
+
+    nearbyLinksWrap.innerHTML = html;
+  }
 }
