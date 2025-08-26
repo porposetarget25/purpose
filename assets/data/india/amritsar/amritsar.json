@@ -41,9 +41,9 @@
         "assets/images/india/amritsar/wagah/4.jpg"
       ],
       "audio": {
-        "English": "assets/audio/india/amritsar/English_Wagah.mp3",
-        "Hindi":   "assets/audio/india/amritsar/English_Wagah.mp3",
-        "Chinese": "assets/audio/india/amritsar/English_Wagah.mp3"
+        "English": "assets/audio/india/wagah/wagah.mp3",
+        "Hindi":   "assets/audio/india/wagah/wagah.mp3",
+        "Chinese": "assets/audio/india/wagah/wagah.mp3"
       }
     },
     {

@@ -127,17 +127,22 @@
         `;
       }).join("");
 
-      featured.innerHTML = `
-        <article class="feature-card" style="--bg:url('${country.hero}')">
-          <div class="feature-card__overlay"></div>
-          <div class="feature-card__content">
-            <h3 class="feature-card__title">Explore ${country.name}</h3>
-            <div class="feature-card__cities">
-              ${citiesHtml}
-            </div>
+    featured.innerHTML = `
+      <article class="feature-card" style="--bg:url('${country.hero}')">
+        <div class="feature-card__overlay"></div>
+
+        <!-- Title pinned at the top -->
+        <h3 class="feature-card__title feature-card__title--top">Explore ${country.name}</h3>
+
+        <div class="feature-card__content">
+          <div class="feature-card__cities">
+            ${citiesHtml}
           </div>
-        </article>
-      `;
+        </div>
+      </article>
+    `;
+
+
     }
 
     // ---- Init ----
