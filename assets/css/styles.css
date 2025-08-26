@@ -599,21 +599,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  width: 100%;               /* stretch full width of sidebar */
-  padding: 22px 24px;        /* bigger padding for elongation */
-  margin-bottom: 14px;
-
-  font-size: 1.2rem;         /* bigger font size */
-  font-weight: 600;
-
-  border: 2px solid transparent;
-  border-radius: 16px;
+  width: 100%;
+  padding: 14px 16px;   /* back to smaller padding */
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  font-size: 1rem;      /* reset font size */
 }
 .country-item:hover {
   transform: translateY(-3px);
@@ -627,24 +620,26 @@ body {
 
 /* Flag/Code style */
 .country-item__flag {
-  font-size: 1.4rem;
-  font-weight: 700;
-  background: #f0f4ff;
-  padding: 12px 18px;
-  border-radius: 12px;
-  color: var(--brand-900);
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;          /* smaller circle */
+  height: 36px;
+  border-radius: 50%;
+  background: #f0f4f8;
+  font-size: 0.9rem;    /* smaller letters inside */
+  font-weight: 600;
+  margin-right: 12px;
 }
 .country-item__meta { display: grid; }
 .country-item__name {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1rem;      /* smaller name text */
+  font-weight: 600;
   color: #111;
 }
 .country-item__sub {
-  font-size: 1rem;
-  color: #555;
-  opacity: 0.9;
+  font-size: 0.85rem;   /* smaller subtitle */
+  color: #666;
 }
 .country-item__dot {
   margin-left: auto;
