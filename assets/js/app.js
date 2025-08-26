@@ -189,6 +189,18 @@ function initApp() {
     if (modalStatus) modalStatus.textContent = '';
   }
 
+  // Smoothly scroll an element into view on small screens (keeps topbar height in mind)
+  function scrollIntoViewIfMobile(el) {
+    if (!el) return;
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      const topbar = document.querySelector(".topbar");
+      const offset = topbar ? topbar.offsetHeight + 8 : 0;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
+
+
   function getAudioSrcFor(lang) {
     if (!currentCard) return null;
     const idx = Number(currentCard.dataset.index);
@@ -362,22 +374,32 @@ function initApp() {
   }
 
   // --- main button reveal (landing-style behavior) ---
-  if (mainBtn) {
-    mainBtn.addEventListener("click", () => {
-      showLoader("Preparing gallery…");
-      mainBtn.setAttribute("aria-expanded", "true");
-      mainBtn.style.display = "none";
-      if (gallery) gallery.hidden = false;
-      Promise.resolve(buildGrid()).finally(hideLoader);
-    });
-  } else {
-    // If page has no main button (direct details page), auto-build grid
-    if (gallery && grid && grid.children.length === 0) {
-      showLoader("Loading gallery…");
-      gallery.hidden = false;
-      Promise.resolve(buildGrid()).finally(hideLoader);
-    }
-  }
+ // --- main button reveal ---
+ if (mainBtn) {
+   mainBtn.addEventListener("click", () => {
+     showLoader("Preparing gallery…");
+     mainBtn.setAttribute("aria-expanded", "true");
+     mainBtn.style.display = "none";
+     if (gallery) gallery.hidden = false;
+     Promise.resolve(buildGrid())
+       .finally(() => {
+         hideLoader();
+         scrollIntoViewIfMobile(gallery);   // 👈 auto-jump to gallery on mobile
+       });
+   });
+ } else {
+   // direct details page
+   if (gallery && grid && grid.children.length === 0) {
+     showLoader("Loading gallery…");
+     gallery.hidden = false;
+     Promise.resolve(buildGrid())
+       .finally(() => {
+         hideLoader();
+         scrollIntoViewIfMobile(gallery);   // 👈 auto-jump to gallery on mobile
+       });
+   }
+ }
+
 
   /* ===============================
      MODAL + CAROUSEL IMPLEMENTATION
@@ -495,17 +517,20 @@ function initApp() {
   }
 
   // Close modal
-  function closeModal() {
-    if (!modal) return;
-    modal.hidden = true;
-    document.body.style.overflow = '';
-    stopAuto();
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    resetModalButtons();
+function closeModal() {
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+  stopAuto();
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
   }
+  resetModalButtons();
+  if (nearbyLinksWrap) nearbyLinksWrap.innerHTML = ""; // 👈 clear chips
+}
+
+
 
   // --- Modal audio buttons (play/pause toggle like bottom, per-language) ---
   if (modalLangBtns) {

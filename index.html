@@ -4,12 +4,8 @@
     <meta charset="UTF-8" />
     <title>World Explorer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Styles -->
     <link rel="preload" href="assets/css/styles.css" as="style" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-
-    <!-- Fonts & theme -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,136 +13,159 @@
 </head>
 <body>
 
-<!-- HERO -->
-<header class="hero hero--compact">
-    <div class="hero__media hero__media--soft" aria-hidden="true"></div>
-    <div class="hero__overlay"></div>
-
-    <div class="hero__content container">
-        <h1 class="hero__title">World Explorer</h1>
-        <p class="hero__tagline">Choose a country to start exploring.</p>
+<!-- Topbar -->
+<nav class="topbar">
+    <div class="topbar__inner container">
+        <a class="brand" href="index.html" aria-label="World Explorer Home">
+            <span class="brand__logo">🌐</span>
+            <span class="brand__text">
+        <strong>World Explorer</strong>
+        <small>Explore the World's Wonders</small>
+      </span>
+        </a>
+        <ul class="nav">
+            <li><a class="nav__link is-active" href="index.html">Home</a></li>
+            <li><a class="nav__link" href="javascript:void(0)">Attractions</a></li>
+            <li><a class="nav__link" href="javascript:void(0)">Map</a></li>
+        </ul>
     </div>
-</header>
+</nav>
+<!-- Journey Section -->
+<section class="hero hero--journey"
+         style="--hero-photo: url('assets/images/journey-bg.jpg')">
+    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+        <h2 class="hero__title">Start Your Journey</h2>
+        <p class="hero__tagline">
+            Select a country to see top cities, or dive into our featured destination
+        </p>
+    </div>
+</section>
 
-<main class="container">
 
-    <!-- Countries -->
-    <section class="section">
-        <h2 class="section__title">Select a Country</h2>
 
-        <div class="country-grid">
-            <!-- TURKEY -->
-            <article class="country-card country-card--turkey" data-country="turkey">
-                <div class="country-card__flag">🇹🇷</div>
-                <h3 class="country-card__name">Turkey</h3>
-                <p class="country-card__desc">Istanbul, Ankara, Izmir, Bursa</p>
-                <button class="country-card__cta" type="button">View cities</button>
-            </article>
 
-            <!-- INDIA -->
-            <article class="country-card country-card--india" data-country="india">
-                <div class="country-card__flag">🇮🇳</div>
-                <h3 class="country-card__name">India</h3>
-                <p class="country-card__desc">Amritsar, Mumbai, New Delhi, Kolkata</p>
-                <button class="country-card__cta" type="button">View cities</button>
-            </article>
+<!-- Two-column layout -->
+<section class="home container">
+    <!-- Sidebar list -->
+    <aside class="sidebar" id="country-list" aria-label="Countries"></aside>
 
-            <!-- UK -->
-            <article class="country-card country-card--uk" data-country="uk">
-                <div class="country-card__flag">🇬🇧</div>
-                <h3 class="country-card__name">United Kingdom</h3>
-                <p class="country-card__desc">Coming soon</p>
-                <button class="country-card__cta" type="button" disabled>Coming soon</button>
-            </article>
+    <!-- Featured panel -->
+    <section class="featured" id="featured" aria-live="polite"></section>
+</section>
 
-            <!-- UAE -->
-            <article class="country-card country-card--uae" data-country="uae">
-                <div class="country-card__flag">🇦🇪</div>
-                <h3 class="country-card__name">UAE</h3>
-                <p class="country-card__desc">Coming soon</p>
-                <button class="country-card__cta" type="button" disabled>Coming soon</button>
-            </article>
-
-            <!-- USA -->
-            <article class="country-card country-card--usa" data-country="usa">
-                <div class="country-card__flag">🇺🇸</div>
-                <h3 class="country-card__name">USA</h3>
-                <p class="country-card__desc">Coming soon</p>
-                <button class="country-card__cta" type="button" disabled>Coming soon</button>
-            </article>
-        </div>
-    </section>
-
-    <!-- Cities panel -->
-    <section id="cities" class="cities-panel" hidden>
-        <div class="cities-panel__header">
-            <h2 class="section__title">Cities in <span id="country-name">Country</span></h2>
-            <button class="chip chip--light" id="close-cities" type="button">Close</button>
-        </div>
-
-        <ul class="city-list" id="city-list"><!-- Filled by JS --></ul>
-    </section>
-</main>
-
-<!-- Inline, page-specific JS -->
 <script>
-    const citiesByCountry = {
-      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa"],
-      india: ["Amritsar", "Mumbai", "New Delhi", "Kolkata"]
+    // ---- Data (you can extend this anytime) ----
+    const DATA = {
+      countries: [
+        {
+          code: "TR",
+          key: "turkey",
+          name: "Turkey",
+          cities: ["Istanbul", "Ankara", "Izmir", "Bursa"],
+          // Large background image for the featured card
+          hero: "https://images.unsplash.com/photo-1636021597151-cc28dacd915c?w=1600&auto=format&fit=crop",
+          // Only these two cities are “active” pages
+          links: { Istanbul: "istanbulDetails.html" }
+        },
+        {
+          code: "IN",
+          key: "india",
+          name: "India",
+          cities: ["Amritsar", "Mumbai", "New Delhi", "Kolkata"],
+          hero: "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1600&auto=format&fit=crop",
+          links: { Amritsar: "amritsarDetails.html" }
+        },
+        { code: "US", key: "usa",  name: "USA",            cities: ["New York","Chicago","LA","SF"], hero: "https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1600&auto=format&fit=crop" },
+        { code: "GB", key: "uk",   name: "United Kingdom", cities: ["London","Manchester","Bristol","Bath"], hero: "https://images.unsplash.com/photo-1587447799293-e50233d6f07f?q=80&w=1600&auto=format&fit=crop" },
+        { code: "NZ", key: "nz",   name: "New Zealand",    cities: ["Auckland","Wellington","Queenstown","Dunedin"], hero: "https://images.unsplash.com/photo-1547314283-befb6cc5cf29?q=80&w=1600&auto=format&fit=crop" }
+      ]
     };
 
-    const countryCards = document.querySelectorAll(".country-card");
-    const citiesPanel   = document.getElementById("cities");
-    const cityList      = document.getElementById("city-list");
-    const countryNameEl = document.getElementById("country-name");
-    const closeBtn      = document.getElementById("close-cities");
+    // ---- Build sidebar list ----
+    const sidebar = document.getElementById("country-list");
+    const featured = document.getElementById("featured");
 
-    function showCities(countryKey, countryLabel){
-      const arr = citiesByCountry[countryKey] || [];
-      countryNameEl.textContent = countryLabel;
-      cityList.innerHTML = "";
-
-      arr.forEach(city => {
-        const li = document.createElement("li");
-        const btn = document.createElement("a");
-        btn.className = "city-pill";
-        btn.textContent = city;
-
-        // Active city routing
-        if (countryKey === "turkey" && city === "Istanbul") {
-          btn.href = "istanbulDetails.html";
-        } else if (countryKey === "india" && city === "Amritsar") {
-          btn.href = "amritsarDetails.html";
-        } else {
-          btn.href = "javascript:void(0)";
-          btn.addEventListener("click", () => alert(`${city} page coming soon!`));
-        }
-
-        li.appendChild(btn);
-        cityList.appendChild(li);
-      });
-
-      citiesPanel.hidden = false;
-      citiesPanel.classList.add("cities-panel--show");
-      citiesPanel.scrollIntoView({behavior:"smooth", block:"start"});
+    function countryItemTpl(c, active=false) {
+      return `
+        <button class="country-item${active ? ' is-active' : ''}" data-key="${c.key}">
+          <span class="country-item__flag">${c.code}</span>
+          <span class="country-item__meta">
+            <span class="country-item__name">${c.name}</span>
+            <span class="country-item__sub">${c.cities.length} Top Cities</span>
+          </span>
+          <span class="country-item__dot" aria-hidden="true"></span>
+        </button>
+      `;
     }
 
-    countryCards.forEach(card => {
-      card.addEventListener("click", () => {
-        const key = card.dataset.country;
-        const label = card.querySelector(".country-card__name").textContent;
-        if (!citiesByCountry[key]) {
-          alert(`${label} coming soon!`);
-          return;
-        }
-        showCities(key, label);
-      });
-    });
+    function renderSidebar(activeKey) {
+      sidebar.innerHTML = DATA.countries
+        .map((c, i) => countryItemTpl(c, (activeKey ? c.key===activeKey : i===0)))
+        .join("");
+    }
 
-    closeBtn.addEventListener("click", () => {
-      citiesPanel.classList.remove("cities-panel--show");
-      setTimeout(() => { citiesPanel.hidden = true; }, 250);
-    });
+    // ---- Featured card ----
+    function renderFeatured(country) {
+      const citiesHtml = country.cities.map((city, i) => {
+        const href = country.links?.[city];
+        const active = Boolean(href);
+        return `
+          <a class="city-row${active ? '' : ' is-disabled'}" ${active ? `href="${href}"` : 'href="javascript:void(0)"'}
+             ${active ? '' : `onclick="alert('${city} page coming soon!')"`}>
+            <span class="city-row__icon">📍</span>
+            <span class="city-row__name">${city}</span>
+          </a>
+        `;
+      }).join("");
+
+      featured.innerHTML = `
+        <article class="feature-card" style="--bg:url('${country.hero}')">
+          <div class="feature-card__overlay"></div>
+          <div class="feature-card__content">
+            <h3 class="feature-card__title">Explore ${country.name}</h3>
+            <div class="feature-card__cities">
+              ${citiesHtml}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    // ---- Init ----
+    renderSidebar();                     // first render
+    renderFeatured(DATA.countries[0]);   // default = first country
+
+    // Smooth scroll helper
+function scrollIntoViewIfMobile(el) {
+  if (!el) return;
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    const topbar = document.querySelector(".topbar");
+    const offset = topbar ? topbar.offsetHeight + 8 : 0;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+}
+
+// ---- Wire clicks ----
+sidebar.addEventListener("click", (e) => {
+  const btn = e.target.closest(".country-item");
+  if (!btn) return;
+  const key = btn.dataset.key;
+  const country = DATA.countries.find(c => c.key === key);
+  if (!country) return;
+
+  // toggle active state
+  sidebar.querySelectorAll(".country-item").forEach(b => b.classList.remove("is-active"));
+  btn.classList.add("is-active");
+
+  renderFeatured(country);
+
+  // 👇 scroll featured panel into view on mobile
+  scrollIntoViewIfMobile(featured);
+});
+
 </script>
 </body>
 </html>
