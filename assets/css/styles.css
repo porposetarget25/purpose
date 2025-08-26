@@ -677,23 +677,43 @@ body {
   font-size: clamp(1.6rem, 3.6vw, 2.4rem);
   text-shadow: 0 14px 30px rgba(0,0,0,.45);
 }
-.feature-card__cities { display: grid; gap: 10px; max-width: 720px; }
+.feature-card__cities {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  /* 2 cities per row */
+  gap: 10px 14px;                         /* space between rows and cols */
+  margin-top: 14px;
+  justify-items: center;
+}
+
 
 .city-row {
-  --bg: rgba(255,255,255,.92);
-  display: grid; grid-template-columns: 28px 1fr;
-  align-items: center; gap: 10px;
-  padding: 12px 14px;
-  background: var(--bg);
-  color: #0f172a; text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
   border-radius: 12px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.18);
-  backdrop-filter: blur(4px);
-  transition: transform .12s ease, box-shadow .12s ease;
+  background: rgba(255, 255, 255, 0.65);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  max-width: 130px;   /* keep them compact */
+  width: 100%;
 }
-.city-row:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,.22); }
-.city-row.is-disabled { opacity: .7; cursor: default; }
-.city-row__icon { filter: grayscale(0.2); }
+
+.city-row:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px);
+}
+.city-row.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.city-row__icon {
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
 .city-row__name { font-weight: 700; }
 
 /* ===== Journey Hero Section ===== */
