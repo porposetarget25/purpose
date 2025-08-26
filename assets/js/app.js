@@ -200,6 +200,13 @@ function initApp() {
     }
   }
 
+function countryCodeToFlagEmoji(cc) {
+  return cc.toUpperCase()
+    .replace(/./g, char =>
+      String.fromCodePoint(127397 + char.charCodeAt())
+    );
+}
+
 
   function getAudioSrcFor(lang) {
     if (!currentCard) return null;

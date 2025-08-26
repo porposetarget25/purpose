@@ -43,7 +43,7 @@ body {
   position: absolute; inset: 0;
   background-image:
     linear-gradient(135deg, rgba(255,94,98,.65), rgba(255,165,0,.65)),
-    url('/assets/images/journey-bg.jpg'); /* <-- absolute path from site root */
+    url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800'); /* <-- absolute path from site root */
   background-size: cover;
   background-position: center 55%;
   transform: scale(1.03);
@@ -414,7 +414,7 @@ body {
 .hero--detail::before {
   content: "";
   position: absolute; inset: 0;
-  background: var(--hero-photo, #333) center/cover no-repeat;
+  background: var(--hero-photo, #85ab95) center/cover no-repeat;
   z-index: 0;
   filter: brightness(0.75) saturate(115%) contrast(105%);
   transform: scale(1.05);

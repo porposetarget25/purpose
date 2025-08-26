@@ -63,9 +63,7 @@
           key: "turkey",
           name: "Turkey",
           cities: ["Istanbul", "Ankara", "Izmir", "Bursa"],
-          // Large background image for the featured card
           hero: "https://images.unsplash.com/photo-1636021597151-cc28dacd915c?w=1600&auto=format&fit=crop",
-          // Only these two cities are “active” pages
           links: { Istanbul: "istanbulDetails.html" }
         },
         {
@@ -76,20 +74,33 @@
           hero: "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1600&auto=format&fit=crop",
           links: { Amritsar: "amritsarDetails.html" }
         },
-        { code: "US", key: "usa",  name: "USA",            cities: ["New York","Chicago","LA","SF"], hero: "https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1600&auto=format&fit=crop" },
-        { code: "GB", key: "uk",   name: "United Kingdom", cities: ["London","Manchester","Bristol","Bath"], hero: "https://images.unsplash.com/photo-1587447799293-e50233d6f07f?q=80&w=1600&auto=format&fit=crop" },
-        { code: "NZ", key: "nz",   name: "New Zealand",    cities: ["Auckland","Wellington","Queenstown","Dunedin"], hero: "https://images.unsplash.com/photo-1547314283-befb6cc5cf29?q=80&w=1600&auto=format&fit=crop" }
+        { code: "US", key: "usa", name: "USA",
+          cities: ["New York","Chicago","LA","SF"],
+          hero: "https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1600&auto=format&fit=crop" },
+        { code: "GB", key: "uk", name: "United Kingdom",
+          cities: ["London","Manchester","Bristol","Bath"],
+          hero: "https://images.unsplash.com/photo-1587447799293-e50233d6f07f?q=80&w=1600&auto=format&fit=crop" },
+        { code: "NZ", key: "nz", name: "New Zealand",
+          cities: ["Auckland","Wellington","Queenstown","Dunedin"],
+          hero: "https://images.unsplash.com/photo-1547314283-befb6cc5cf29?q=80&w=1600&auto=format&fit=crop" }
       ]
     };
 
+    // ---- Helper: convert ISO code to flag emoji ----
+    function countryCodeToFlagEmoji(cc) {
+      return cc.toUpperCase().replace(/./g, ch =>
+        String.fromCodePoint(127397 + ch.charCodeAt(0))
+      );
+    }
+
     // ---- Build sidebar list ----
-    const sidebar = document.getElementById("country-list");
+    const sidebar  = document.getElementById("country-list");
     const featured = document.getElementById("featured");
 
     function countryItemTpl(c, active=false) {
       return `
         <button class="country-item${active ? ' is-active' : ''}" data-key="${c.key}">
-          <span class="country-item__flag">${c.code}</span>
+          <span class="country-item__flag" aria-hidden="true">${countryCodeToFlagEmoji(c.code)}</span>
           <span class="country-item__meta">
             <span class="country-item__name">${c.name}</span>
             <span class="country-item__sub">${c.cities.length} Top Cities</span>
@@ -107,7 +118,7 @@
 
     // ---- Featured card ----
     function renderFeatured(country) {
-      const citiesHtml = country.cities.map((city, i) => {
+      const citiesHtml = country.cities.map((city) => {
         const href = country.links?.[city];
         const active = Boolean(href);
         return `
@@ -137,34 +148,34 @@
     renderFeatured(DATA.countries[0]);   // default = first country
 
     // Smooth scroll helper
-function scrollIntoViewIfMobile(el) {
-  if (!el) return;
-  if (window.matchMedia("(max-width: 900px)").matches) {
-    const topbar = document.querySelector(".topbar");
-    const offset = topbar ? topbar.offsetHeight + 8 : 0;
-    const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
-}
+    function scrollIntoViewIfMobile(el) {
+      if (!el) return;
+      if (window.matchMedia("(max-width: 900px)").matches) {
+        const topbar = document.querySelector(".topbar");
+        const offset = topbar ? topbar.offsetHeight + 8 : 0;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
 
-// ---- Wire clicks ----
-sidebar.addEventListener("click", (e) => {
-  const btn = e.target.closest(".country-item");
-  if (!btn) return;
-  const key = btn.dataset.key;
-  const country = DATA.countries.find(c => c.key === key);
-  if (!country) return;
+    // ---- Wire clicks ----
+    sidebar.addEventListener("click", (e) => {
+      const btn = e.target.closest(".country-item");
+      if (!btn) return;
+      const key = btn.dataset.key;
+      const country = DATA.countries.find(c => c.key === key);
+      if (!country) return;
 
-  // toggle active state
-  sidebar.querySelectorAll(".country-item").forEach(b => b.classList.remove("is-active"));
-  btn.classList.add("is-active");
+      // toggle active state
+      sidebar.querySelectorAll(".country-item").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
 
-  renderFeatured(country);
+      renderFeatured(country);
 
-  // 👇 scroll featured panel into view on mobile
-  scrollIntoViewIfMobile(featured);
-});
-
+      // scroll featured panel into view on mobile
+      scrollIntoViewIfMobile(featured);
+    });
 </script>
+
 </body>
 </html>
