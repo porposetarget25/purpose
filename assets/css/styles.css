@@ -778,6 +778,24 @@ body {
   margin: 0 auto;
   color: #eaeaea;
 }
+/* Gradient-styled rotating globe */
+.globe {
+  display: inline-block;
+  font-size: 2rem; /* bigger, more prominent */
+  background: linear-gradient(135deg, #1e90ff 30%, #2ecc71 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: spin 8s linear infinite;
+  text-shadow: 0 0 6px rgba(0,0,0,0.25);
+}
+
+/* Rotation aniation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
 
 
 
