@@ -785,7 +785,7 @@ body {
   background: linear-gradient(135deg, #1e90ff 30%, #2ecc71 70%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: spin 8s linear infinite;
+  animation: spin 6s linear infinite;
   text-shadow: 0 0 6px rgba(0,0,0,0.25);
 }
 
