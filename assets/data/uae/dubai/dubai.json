@@ -1,0 +1,84 @@
+{
+  "city": "Dubai, UAE",
+  "images": [
+    {
+      "title": "Burj Khalifa",
+      "src": "https://images.unsplash.com/photo-1583759604327-f9dcd23499d5?q=80&w=1170&auto=format&fit=crop",
+      "gallery": [
+        "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1170&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?q=80&w=735&auto=format&fit=crop",
+        "https://cdn.helicoptertourdubai.ae/helicopter_tour_dubai/blog/17028058967421-683.jpeg",
+        "https://travelwithkat.com/wp-content/uploads/2015/03/DSC5977_tonemapped.jpg",
+        "https://images.locationscout.net/2019/08/fountain-view-from-burj-khalifa-day-night-united-arab-emirates.webp?h=1400&q=80",
+        "https://images.unsplash.com/photo-1663768266738-436531e1638a?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1582120031356-35f21bf61055?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/flagged/photo-1559717865-a99cac1c95d8?q=80&w=1171&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1640953036047-5566900ea05d?q=80&w=1074&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?q=80&w=735&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1661964303354-f0496d6d6e0b?q=80&w=1320&auto=format&fit=crop"
+      ],
+      "audio": {
+        "English": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Hindi": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Chinese": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3"
+      }
+    },
+    {
+      "title": "Palm Jumeirah",
+      "src": "https://www.drivenproperties.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2F74l1zcgb%2Fproduction%2F54e6f05f7b776463798f4b4af0cb609140a96acd-1200x450.jpg&w=1920&q=75",
+      "gallery": [
+        "https://blog.sothebysrealty.ae/hubfs/Imported_Blog_Media/a8e16726-b773-404e-9bef-dc26e0b13270.jpg",
+        "https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://fnst.axflare.com/community/JPEG/GBJQzJMoxn.jpeg",
+        "https://images.unsplash.com/photo-1677508397947-b477be938a9b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://www.flamingotravels.co.in/blog/wp-content/uploads/2025/02/Palm-Jumeirah-Dubai.jpg",
+        "https://www.visitdubai.com/-/media/images/leisure/neighbourhood-pages/palm-jumeirah/media/palm-jumeirah-media-3-dtcm.jpg",
+        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXcOfXFfEbxJLtNdTC0UkrYKijjjg0nmfckbFaB_a0i91D6FfZoX41W_h58MFF3HHs2yWRNaTPgto_QDNaHM48h7AZkqcDfbL8Oh5QQE096_6L4wQYoldR49Mw-wo0RnpzVPt2fH1UcfzSet2uS7oQ?key=JXBNDOghFDC7KyPVRv0hog",
+        "https://images.unsplash.com/photo-1677508398331-58597cd61618?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ],
+      "audio": {
+        "English": "assets/audio/uae/dubai/palm/english-palm.mp3",
+        "Hindi": "assets/audio/uae/dubai/burjKhalifa/english-palm.mp3",
+        "Chinese": "assets/audio/uae/dubai/burjKhalifa/english-palm.mp3"
+      }
+    },
+    {
+      "title": "Dubai Marina",
+      "src": "https://images.pexels.com/photos/1470405/pexels-photo-1470405.jpeg",
+      "gallery": [
+        "https://images.pexels.com/photos/3032330/pexels-photo-3032330.jpeg",
+        "https://w0.peakpx.com/wallpaper/714/882/HD-wallpaper-dubai-marina-2022-city-travel.jpg",
+        "https://www.drivenproperties.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2F74l1zcgb%2Fproduction%2Fbe86df002b612ab7d901de78a5252b9f0ba186f3-1200x450.jpg&w=1920&q=75",
+        "https://images.unsplash.com/photo-1722502831583-b4e93ecc6027?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1609874351819-8a267932ed67?q=80&w=1336&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium_photo-1661916762370-4768aa1fc4c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://www.visitdubai.com/-/media/gathercontent/poi/d/dubai-marina-mall/fallback-image/dubai-marina-mall-02.jpg?rev=1f643a4d2b7f4639b06b424a0195065c&cx=0.5&cy=0.64&cw=1420&ch=710"
+      ],
+      "audio": {
+        "English": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Hindi": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Chinese": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3"
+      }
+    },
+    {
+      "title": "Dubai Mall",
+      "src": "https://media.istockphoto.com/id/1402255347/photo/dubai-mall-trade-center.jpg?s=612x612&w=0&k=20&c=hH-Gt5bnXWeN_nWBJz8sNyrxc7xKhpfXLPulfKaL5NI=",
+      "gallery": [
+        "https://www.shutterstock.com/image-photo/18-january-2023-dubai-uae-600nw-2295532699.jpg",
+        "https://t4.ftcdn.net/jpg/00/69/58/15/360_F_69581513_jeVRYar3arnYZfT4VaTDkzx9j5jx42Vd.jpg",
+        "https://images.prismic.io/11prop-blog/Zzh8jK8jQArT08A__10-DubaiMallDirections-www.hotels-dubai.org-_11zon.webp?auto=format,compress",
+        "https://media.istockphoto.com/id/1200185698/photo/dubai-mall-luxury-shopping-center-fashion-avenue-entrance-in-a-sunny-day.jpg?s=612x612&w=0&k=20&c=tksJBQeRpBtcsl5OFWRjxCbVUF2U-dwiDerNZjf-bOc=",
+        "https://media.istockphoto.com/id/1560529484/photo/apple-store-located-in-dubai-mall.jpg?s=612x612&w=0&k=20&c=_Rh6FlJb-6oaE8IYn0M_ImTevRj_nsciWd09xwoz_uc=",
+        "https://media.istockphoto.com/id/1269123939/photo/dubai-mall-main-entrance-with-burj-khalifa-in-rising-in-the-background.jpg?s=612x612&w=0&k=20&c=dUvtoXLbNDC2IDoIFqMjqch-s3yTumveHmEv8hHrtmM=",
+        "https://images.unsplash.com/photo-1562280963-8a5475740a10?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1617449512807-7401d38e5c29?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
+      ],
+      "audio": {
+        "English": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Hindi": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3",
+        "Chinese": "assets/audio/uae/dubai/burjKhalifa/english-burj.mp3"
+      }
+    }
+  ]
+}

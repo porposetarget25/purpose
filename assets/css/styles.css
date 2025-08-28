@@ -601,6 +601,7 @@ body {
   gap: 24px;
   align-items: start;
   padding-bottom: 32px;
+  justify-content: center;
 }
 @media (max-width: 980px) { .home { grid-template-columns: 1fr; } }
 
@@ -610,14 +611,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 104%;
+  max-width: 104%;   /* prevents breaking container */
+    width: 100%;       /* fill available width */
+    margin: 0 auto;
   padding: 14px 16px;   /* back to smaller padding */
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: all 0.15s ease;
-  font-size: 1.1rem;      /* reset font size */
+  font-size: 1.1rem;
+  margin: 0 auto;
 }
 .country-item:hover {
   transform: translateY(-3px);
@@ -663,7 +667,10 @@ body {
 .country-item.is-active .country-item__dot { background: #3aa0ff; }
 
 /* Featured big card */
-.featured { width: 104%; }
+.featured {
+ max-width: 104%;   /* prevents breaking container */
+  width: 100%;       /* fill available width */
+  margin: 0 auto;  }
 .feature-card {
   position: relative;
   border-radius: 16px;
