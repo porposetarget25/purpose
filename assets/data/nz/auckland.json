@@ -1,0 +1,90 @@
+{
+  "city": "Auckland, New Zealand",
+  "images": [
+    {
+      "title": "Sky Tower",
+      "src": "https://images.unsplash.com/photo-1677557769796-a63930e463b5?q=80&w=1400&auto=format&fit=crop",
+      "gallery": [
+        "https://myqueenstowndiary.com/wp-content/uploads/2023/02/Wide-view-out-the-windows-of-the-Auckland-SKy-Tower.jpg.webp",
+        "https://myqueenstowndiary.com/wp-content/uploads/2023/02/Bailey-enjoys-the-view-at-the-Sky-Tower-in-Auckland.jpg.webp",
+        "https://upload.wikimedia.org/wikipedia/commons/3/3f/Skytower_view_%287187527772%29.jpg",
+        "https://images.unsplash.com/photo-1515248027005-c33283ec3fba?q=80&w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1718398892687-3ad09abfbe80?q=80&w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1677557769755-875d8141c0c6?q=80&w=2071&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1754262176682-01a3d50f62b9?q=80&w=1170&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1616569102402-305a92bbe497?q=80&w=880&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1754211664825-e1a88653c231?q=80&w=1170&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1524475307626-b963f4b88d8f?q=80&w=1332&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1754262026669-baaabab668bf?q=80&w=1170&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1723525390851-cc8e0694eed4?q=80&w=1074&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1754258422687-798cc9c80c5d?q=80&w=2071&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1677557769796-a63930e463b5?q=80&w=1400&auto=format&fit=crop"
+      ],
+      "audio": {
+        "English": "assets/audio/nz/auckland/skyTower/skytower_english.mp3",
+        "Hindi":   "assets/audio/nz/auckland/skyTower/skytower_hindi.mp3",
+        "Chinese": "assets/audio/nz/auckland/skyTower/skytower_english.mp3"
+      },
+      "placeQuery": "Sky Tower Auckland",
+      "coords": { "lat": -36.8485, "lng": 174.7622 }
+    },
+    {
+      "title": "Auckland Domain",
+      "src": "https://hnzptlistonlineproduction.azurewebsites.net/list/image/0094a_lg.jpg",
+      "gallery": [
+        "https://cdn.sanity.io/images/n1o990un/production/34627e8e6b81e57bf1d268acd9331e68f819a93f-1536x1153.jpg",
+        "https://images.myguide-cdn.com/auckland/companies/auckland-domain/large/auckland-domain-59096.jpg",
+        "https://cdn.prod.website-files.com/634fffdbdc605cd46da92559/66f0e8a24d2fd5f82afb8ee7_64c97d2a053197fc817b84a4_JP1_5509%2520(Large).jpeg",
+        "https://cdn.prod.website-files.com/634fffdbdc605cd46da92559/66f0e8a24d2fd5f82afb8ed1_64c97d7a053197fc817ba220_JP1_5471%2520(Large).jpeg",
+        "https://cdn.prod.website-files.com/634fffdbdc605cd46da92559/66f0e8a24d2fd5f82afb8ed9_64c97ec8f6ea7b0532264ca9_DSCF7028%2520(Large).jpeg",
+        "https://media.istockphoto.com/id/2152418467/photo/domain-wintergardens.jpg?s=612x612&w=0&k=20&c=JzwAQmxZU08Ya4J59x8HZkrxn7JKYXqkLhZYEW5-Weo=",
+        "https://hnzptlistonlineproduction.azurewebsites.net/list/image/0094a_lg.jpg",
+        "https://www.parnell.net.nz/wp-content/uploads/2020/06/AucklandMuseum_Parnell_bannerpic.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/nz/auckland/skyTower/skytower_english.mp3",
+        "Hindi":   "assets/audio/nz/auckland/skyTower/skytower_hindi.mp3",
+        "Chinese": "assets/audio/nz/auckland/skyTower/skytower_english.mp3"
+      },
+      "placeQuery": "Auckland Domain",
+      "coords": { "lat": -36.8650, "lng": 174.7762 }
+    },
+    {
+      "title": "Mount Eden (Maungawhau)",
+      "src": "https://www.sciencelearn.org.nz/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F117510%2F1722377507-mteden_geonetgns.jpg%3Fw%3D1840%26h%3D1536.121212121212&w=1920&q=85&dpl=dpl_CHH9oRj47aBK6E1SqtvQeCZCJhNe",
+      "gallery": [
+        "https://images.unsplash.com/photo-1574791326400-feb1a7a4527b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW91bnQlMjBlZGVufGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1714006721758-ba27b8e0b806?q=80&w=1071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1628062953306-2edd9396484d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1vdW50JTIwZWRlbnxlbnwwfHwwfHx8MA%3D%3D",
+        "https://www.aucklandcouncil.govt.nz/parks-recreation/get-outdoors/aklpaths/AKLPathImages/393_MaungawhauMtEdenPath14.JPG?RenditionID=8",
+        "https://cdn.prod.rexby.com/image/370ef2b7977047038916d80d0c7c91b8?format=webp&width=1920&height=2400"
+      ],
+      "audio": {
+        "English": "assets/audio/nz/auckland/skyTower/skytower_english.mp3",
+        "Hindi":   "assets/audio/nz/auckland/skyTower/skytower_hindi.mp3",
+        "Chinese": "assets/audio/nz/auckland/skyTower/skytower_english.mp3"
+      },
+      "placeQuery": "Mount Eden Maungawhau",
+      "coords": { "lat": -36.8770, "lng": 174.7645 }
+    },
+    {
+      "title": "Viaduct Harbour",
+      "src": "https://images.luxuryescapes.com/fl_progressive,q_auto:best,c_scale,w_1200/01qrh93ev9aidius60fl.webp",
+      "gallery": [
+        "https://images.unsplash.com/photo-1600208669687-f19af3638cb9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1602847189686-6bb361a3066d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.myguide-cdn.com/content/1/large/viaduct-harbour-1378202.jpg",
+        "https://plus.unsplash.com/premium_photo-1661963939186-973fd7a5c452?q=80&w=1170&auto=format&fit=crop",
+        "https://i0.wp.com/aucklife.co.nz/wp-content/uploads/2018/09/beautiful-viaduct-harbour-sunset-street-photography-auckland.jpg?fit=960%2C641&ssl=1",
+        "https://www.newzealand.com/assets/externally-managed-assets/tbd-assets/tbd-folder-10025309/img-1713781833-770-1992556-tbd-asset__aWxvdmVrZWxseQo_CropResizeWzk0MCw1MzAsOTAsImpwZyJd.jpg"
+      ],
+      "audio": {
+        "English": "assets/audio/nz/auckland/skyTower/skytower_english.mp3",
+        "Hindi":   "assets/audio/nz/auckland/skyTower/skytower_hindi.mp3",
+        "Chinese": "assets/audio/nz/auckland/skyTower/skytower_english.mp3"
+      },
+      "placeQuery": "Viaduct Harbour Auckland",
+      "coords": { "lat": -36.8410, "lng": 174.7633 }
+    }
+  ]
+}
