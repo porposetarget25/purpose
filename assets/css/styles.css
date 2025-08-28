@@ -610,14 +610,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 104%;
   padding: 14px 16px;   /* back to smaller padding */
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: all 0.15s ease;
-  font-size: 1rem;      /* reset font size */
+  font-size: 1.1rem;      /* reset font size */
 }
 .country-item:hover {
   transform: translateY(-3px);
@@ -663,7 +663,7 @@ body {
 .country-item.is-active .country-item__dot { background: #3aa0ff; }
 
 /* Featured big card */
-.featured { width: 100%; }
+.featured { width: 104%; }
 .feature-card {
   position: relative;
   border-radius: 16px;
