@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Travel & Safety | World Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="assets/css/styles.css" as="style" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0a3d62">
+    <style>
+        /* Small page-specific polish */
+        .ts-hero { position: relative; overflow: hidden; border-radius: 20px; margin: 20px auto; }
+        .ts-hero .hero__media { filter: brightness(0.85) saturate(110%); }
+        .ts-wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+        .ts-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0 20px; }
+        .ts-select { appearance:none; padding:12px 16px; border-radius:14px; border:1px solid #e6e9f0; background:#fff; font-weight:600 }
+        .ts-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
+                   border: 1px solid #eef1f6; border-radius: 16px; padding: 18px; margin: 12px 0; }
+        .ts-card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+        .ts-muted { color:#6b7280; font-size: .9rem; }
+        .ts-badge { display:inline-block; padding:6px 10px; border-radius:999px; background:#eef5ff; color:#1d4ed8; font-weight:600; font-size:.8rem; }
+        .ts-note { background:#fff8d8; border:1px solid #f2e7a8; color:#6b5f02; padding:10px 12px; border-radius:12px; font-size:.9rem; }
+        @media (max-width: 860px) { .ts-wrap { padding: 12px; } }
+    </style>
+</head>
+
+<body>
+<!-- Topbar -->
+<nav class="topbar">
+    <div class="topbar__inner container">
+        <a class="brand" href="index.html" aria-label="World Explorer Home">
+            <span class="brand__logo globe">🌐</span>
+            <span class="brand__text">
+        <strong>World Explorer</strong>
+        <small>Explore the World's Wonders</small>
+      </span>
+        </a>
+        <ul class="nav">
+            <li><a class="nav__link" href="index.html">Home</a></li>
+            <li><a class="nav__link is-active" href="travel.html">Travel &amp; Safety</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero ts-hero"
+        style="--hero-photo: url('https://images.unsplash.com/photo-1534854638093-bada1813ca19?q=80&w=1600&auto=format&fit=crop')">
+    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+        <h1 class="hero__title">Travel &amp; Safety</h1>
+        <p class="hero__tagline">Quick essentials for a safer, smoother trip. Policies change often—always verify with official sources.</p>
+    </div>
+</header>
+
+<main class="ts-wrap">
+    <!-- Controls -->
+    <div class="ts-controls">
+        <span class="ts-badge">Select a country</span>
+        <select id="country-select" class="ts-select" aria-label="Select a country">
+            <!-- Filled by JS -->
+        </select>
+        <span class="ts-muted">Tip: information here is a helpful summary, not legal advice. Double-check before you travel.</span>
+    </div>
+
+    <!-- Output cards -->
+    <section id="ts-output">
+        <!-- Filled by JS -->
+    </section>
+</main>
+
+<script>
+    /* ========= Data seed (extend any time) ========= */
+    const DATA = {
+      "Turkey": {
+        visa: [
+          "Visa policy depends on nationality. Some travelers are visa-exempt or eligible for an e-Visa.",
+          "Typical passport validity requested: at least 6 months beyond arrival.",
+          "Strongly consider travel insurance covering medical care & trip disruptions."
+        ],
+        laws: [
+          "Public conduct: be respectful around religious sites; modest dress is recommended in mosques.",
+          "Alcohol is legal (18+). Public intoxication is discouraged; regulations vary by municipality.",
+          "Photography: avoid military or government facilities without permission."
+        ],
+        safety: [
+          "Urban centers are busy; keep valuables secure against petty theft.",
+          "Use licensed taxis or reputable ride-hailing apps.",
+          "Beware common scams (overpriced tours, unsolicited help)."
+        ],
+        emergency: [
+          "Unified Emergency: 112 (Police/Fire/Ambulance).",
+          "Keep your embassy/consulate details handy."
+        ],
+        health: [
+          "Routine vaccines up to date. Consider Hepatitis A if eating street food.",
+          "Tap water quality varies—bottled water is common.",
+          "Major cities have good hospitals; carry any prescriptions with generic names."
+        ]
+      },
+
+      "India": {
+        visa: [
+          "Most nationalities require a visa or e-Visa—check the official Indian visa portal.",
+          "Passport validity typically 6 months beyond arrival, with blank pages.",
+          "Travel insurance recommended (medical + evacuation)."
+        ],
+        laws: [
+          "Local alcohol rules vary by state; check local regulations.",
+          "Public displays of affection may attract attention in some areas.",
+          "Photography: avoid government/military facilities; always ask before photographing people."
+        ],
+        safety: [
+          "In crowded areas, watch for pickpockets & bag snatching.",
+          "Prefer registered taxis/ride-hailing; avoid unmarked vehicles.",
+          "Beware scams (fake ticket offices, unsolicited guides)."
+        ],
+        emergency: [
+          "All emergencies: 112. Police: 100. Ambulance: 102 or 108. Fire: 101.",
+          "Save your embassy/consulate contacts."
+        ],
+        health: [
+          "Consider Hep A, Typhoid; ensure routine vaccines are current.",
+          "Drink sealed bottled water; avoid ice of unknown source.",
+          "Carry basic meds; reputable private hospitals in major cities."
+        ]
+      },
+
+      "USA": {
+        visa: [
+          "Visa or ESTA (for eligible nationalities) required depending on passport.",
+          "Passport validity should cover your stay; 6 months is commonly advised.",
+          "Medical care can be expensive—comprehensive insurance is essential."
+        ],
+        laws: [
+          "Legal drinking age is 21 nationwide.",
+          "Cannabis laws vary by state; federal rules still apply in airports.",
+          "Follow local driving and right-of-way laws; strict DUI enforcement."
+        ],
+        safety: [
+          "Tourist areas are generally safe; stay aware in unfamiliar neighborhoods.",
+          "Call 911 for emergencies; follow local advice during severe weather.",
+          "Avoid scams (fake tickets, phishing texts)."
+        ],
+        emergency: [
+          "911: Police, Fire, Ambulance (nationwide).",
+          "Keep digital and printed copies of ID/insurance details."
+        ],
+        health: [
+          "Routine vaccines up to date.",
+          "Tap water generally safe unless local advisories say otherwise.",
+          "Carry any prescriptions in original containers."
+        ]
+      },
+
+      "UAE": {
+        visa: [
+          "Visa policy varies by nationality; many receive visa-on-arrival.",
+          "Passport typically must be valid 6 months from entry date.",
+          "Travel insurance recommended."
+        ],
+        laws: [
+          "Strict laws around public decency; avoid public intoxication.",
+          "Alcohol allowed in licensed venues (legal age often 21; rules vary by emirate).",
+          "Photography: avoid government/military sites and photographing strangers without consent."
+        ],
+        safety: [
+          "Generally very safe with low crime rates.",
+          "Traffic can be fast—use marked crossings and licensed taxis/ride-hailing.",
+          "Be cautious of ‘too good to be true’ offers."
+        ],
+        emergency: [
+          "Police: 999. Ambulance: 998. Fire: 997.",
+          "Know your embassy/consulate details."
+        ],
+        health: [
+          "Routine vaccines current; heat exposure is a risk—hydrate well.",
+          "Tap water is treated; many visitors prefer bottled water.",
+          "Modern hospitals/clinics widely available."
+        ]
+      },
+
+      "New Zealand": {
+        visa: [
+          "NZeTA or visa may be required depending on nationality.",
+          "Passport should generally be valid 3–6 months beyond travel; check current rules.",
+          "Travel insurance recommended for outdoor activities."
+        ],
+        laws: [
+          "Legal drinking age is 18.",
+          "Strict biosecurity: declare food, plants, outdoor gear (clean) on arrival.",
+          "Respect private land; follow DOC (Dept. of Conservation) rules."
+        ],
+        safety: [
+          "Low crime; use common sense in cities and trailhead car parks.",
+          "Weather changes quickly—check conditions before hikes/sea activities.",
+          "Drive carefully on narrow/twisty roads; keep left."
+        ],
+        emergency: [
+          "111: Police, Fire, Ambulance.",
+          "Consider registering detailed trip plans for remote hikes."
+        ],
+        health: [
+          "Routine vaccines up to date.",
+          "Tap water is generally safe.",
+          "Well-distributed hospitals/urgent care; remote areas can be far from services."
+        ]
+      }
+    };
+
+    /* ========= UI rendering ========= */
+    const selectEl = document.getElementById('country-select');
+    const out = document.getElementById('ts-output');
+
+    function countryOptionTpl(name) {
+      return `<option value="${name}">${name}</option>`;
+    }
+
+    function sectionTpl(title, items) {
+      const list = items.map(i => `<li>${i}</li>`).join("");
+      return `
+        <article class="ts-card">
+          <h3>${title}</h3>
+          <ul>${list}</ul>
+        </article>
+      `;
+    }
+
+    function renderCountry(name) {
+      const d = DATA[name];
+      if (!d) {
+        out.innerHTML = `
+          <article class="ts-card ts-note">
+            We don’t have a summary for <strong>${name}</strong> yet.
+            Please check your government travel advisories and the destination’s official site.
+          </article>`;
+        return;
+      }
+
+      out.innerHTML = `
+        ${sectionTpl("1) Visa & Entry Requirements", d.visa)}
+        ${sectionTpl("2) Local Laws & Rules", d.laws)}
+        ${sectionTpl("3) Safety & Security", d.safety)}
+        ${sectionTpl("4) Emergency Numbers", d.emergency)}
+        ${sectionTpl("5) Health Precautions", d.health)}
+        <article class="ts-card ts-note">
+          <strong>Important:</strong> Policies change frequently. Always verify with official
+          government sources and your airline before you travel.
+        </article>
+      `;
+    }
+
+    /* ========= Init ========= */
+    const countryNames = Object.keys(DATA).sort();
+    selectEl.innerHTML = countryNames.map(countryOptionTpl).join("");
+    renderCountry(countryNames[0]);
+
+    selectEl.addEventListener('change', () => {
+      renderCountry(selectEl.value);
+    });
+</script>
+</body>
+</html>
