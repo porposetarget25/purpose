@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Discover Cape Town</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Styles -->
+    <link rel="preload" href="assets/css/styles.css" as="style" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- Fonts & theme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0a3d62">
+</head>
+
+<!-- Load city config JSON for Cape Town -->
+<body data-config="assets/data/southAfrica/capetown/cape-town.json">
+<!-- Topbar -->
+<nav class="topbar">
+    <div class="topbar__inner container">
+        <a class="brand" href="index.html" aria-label="World Explorer Home">
+            <span class="brand__logo globe">🌐</span>
+            <span class="brand__text">
+        <strong>World Explorer</strong>
+        <small>Explore the World's Wonders</small>
+      </span>
+        </a>
+        <ul class="nav">
+            <li><a class="nav__link" href="index.html">Home</a></li>
+            <li><a class="nav__link" href="travel.html">Travel &amp; Safety</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero hero--detail"
+        style="--hero-photo: url('https://images.unsplash.com/photo-1580060839134-75a5edca2e99?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+    <div class="hero__content container">
+        <h1 class="hero__title">Discover Cape Town</h1>
+        <p class="hero__tagline">Table Mountain skylines, ocean drives, and colorful Cape culture.</p>
+    </div>
+</header>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery" hidden>
+    <div id="image-grid" class="image-grid" role="list"></div>
+
+    <div class="details container">
+        <img id="preview" alt="" class="preview" />
+
+        <div class="glass-panel">
+            <div class="lang-buttons" role="group" aria-label="Language audio controls">
+                <button class="lang-btn" data-lang="English" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> English
+                </button>
+                <button class="lang-btn" data-lang="Hindi" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Hindi
+                </button>
+                <button class="lang-btn" data-lang="Chinese" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Chinese
+                </button>
+                <!-- Page-level STOP (unique id for this page) -->
+                <button class="lang-btn" id="page-stop-btn" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Stop
+                </button>
+            </div>
+            <div id="status" aria-live="polite"></div>
+        </div>
+    </div>
+</section>
+
+<main class="container" style="margin-top:16px">
+    <a href="index.html">⬅ Back to Countries</a>
+</main>
+
+<!-- Modal viewer -->
+<div id="spot-modal" class="modal" hidden>
+    <div class="modal__backdrop" data-close="true"></div>
+
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal__close" type="button" aria-label="Close" data-close="true">✕</button>
+
+        <h3 id="modal-title" class="modal__title"></h3>
+
+        <!-- Carousel -->
+        <div class="carousel" id="carousel">
+            <button class="carousel__nav carousel__nav--prev" type="button" aria-label="Previous" data-prev>‹</button>
+            <div class="carousel__viewport">
+                <div class="carousel__track" id="carousel-track"></div>
+            </div>
+            <button class="carousel__nav carousel__nav--next" type="button" aria-label="Next" data-next>›</button>
+            <div class="carousel__dots" id="carousel-dots"></div>
+        </div>
+
+        <div class="glass-panel modal__controls">
+            <div class="lang-buttons" id="modal-lang-buttons" role="group" aria-label="Language audio controls">
+                <button class="lang-btn" data-lang="English" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> English
+                </button>
+                <button class="lang-btn" data-lang="Hindi" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Hindi
+                </button>
+                <button class="lang-btn" data-lang="Chinese" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Chinese
+                </button>
+                <!-- Modal STOP -->
+                <button class="lang-btn" id="modal-stop-btn" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Stop
+                </button>
+            </div>
+
+            <!-- Nearby links -->
+            <div class="nearby">
+                <h4 class="nearby__title">Nearby</h4>
+                <div id="nearby-links" class="nearby__chips"></div>
+            </div>
+
+            <div id="modal-status" aria-live="polite"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Shared audio element -->
+<audio id="audio-player" preload="none"></audio>
+
+<script src="assets/js/app.js" defer></script>
+</body>
+
+<!-- Page Loader -->
+<div id="page-loader" class="loader" aria-live="polite" aria-busy="true" hidden>
+    <div class="loader__spinner" role="status" aria-label="Loading"></div>
+    <p class="loader__text">Loading your experience…</p>
+</div>
+</html>

@@ -1,0 +1,86 @@
+{
+  "city": "Cape Town, South Africa",
+  "images": [
+    {
+      "title": "Table Mountain",
+      "src": "https://images.unsplash.com/photo-1591418528027-7e854ba7418b?q=80&w=1450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "gallery": [
+        "https://t4.ftcdn.net/jpg/01/84/39/17/360_F_184391725_IRgXGVATFIz8u04ItcpyilSBOlT2TSlc.jpg",
+        "https://images.unsplash.com/photo-1529528070131-eda9f3e90919?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1563656157432-67560011e209?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1604763655221-b98ebdac6ddf?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1612860606900-25b4b0bc79ba?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1575540538034-c69be309c367?q=80&w=1073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1585585199681-e609a8b50577?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1583409612679-90ecabb5bbb4?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1658010383393-ca6a19f1dea7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://brookebeyond.com/wp-content/uploads/2017/08/IMG_1391.jpg"
+      ],
+      "coords": { "lat": -33.9628, "lng": 18.4098 },
+      "placeQuery": "Table Mountain Cape Town",
+      "audio": {
+        "English": "assets/audio/sa/cape-town/common.mp3",
+        "Hindi":   "assets/audio/sa/cape-town/common.mp3",
+        "Chinese": "assets/audio/sa/cape-town/common.mp3"
+      }
+    },
+    {
+      "title": "V&A Waterfront",
+      "src": "https://images.unsplash.com/photo-1579872940640-ff920dd71c7d?q=80&w=1117&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "gallery": [
+        "https://images.unsplash.com/photo-1579872940640-ff920dd71c7d?q=80&w=1117&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1712850256111-bfd1677f7f5e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium_photo-1674512540101-00c0ceca8b4e?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1721155926423-adb5d4033e23?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1634487905890-8cce7e23faba?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium_photo-1677353359626-6e4420349bde?q=80&w=1159&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1679128991434-0c2e03d61bc5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ],
+      "coords": { "lat": -33.9070, "lng": 18.4207 },
+      "placeQuery": "V&A Waterfront Cape Town",
+      "audio": {
+        "English": "assets/audio/sa/cape-town/common.mp3",
+        "Hindi":   "assets/audio/sa/cape-town/common.mp3",
+        "Chinese": "assets/audio/sa/cape-town/common.mp3"
+      }
+    },
+    {
+      "title": "Chapmans-Peak",
+      "src": "https://images.unsplash.com/photo-1673690129045-a6ad0b657e88?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "gallery": [
+        "https://www.capetourism.com/wp-content/uploads/2023/02/Chapmans-Peak-1.jpg",
+        "https://images.unsplash.com/photo-1588097364416-f79243f2b3f0?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "assets/images/sa/shahir.jpeg",
+        "https://images.unsplash.com/photo-1615206131285-a1346ba875a6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1704037161542-ed2988c4d481?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1673690129045-a6ad0b657e88?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ],
+      "placeQuery": "Chapmans-Peak Cape Town",
+      "audio": {
+        "English": "assets/audio/sa/cape-town/common.mp3",
+        "Hindi":   "assets/audio/sa/cape-town/common.mp3",
+        "Chinese": "assets/audio/sa/cape-town/common.mp3"
+      }
+    },
+    {
+      "title": "Camps Bay",
+      "src": "https://images.unsplash.com/photo-1588455471455-4b28e9ab3cd5?q=80&w=1231&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "gallery": [
+        "https://images.unsplash.com/photo-1500808611928-71725d628cc8?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1582129631151-a52a641a9be8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1618252769704-6c87bd3cf515?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1626359508930-488d5f1239b6?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1585561011884-ee6d4200bb34?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
+
+      ],
+      "coords": { "lat": -33.9519, "lng": 18.3789 },
+      "placeQuery": "Camps Bay Cape Town",
+      "audio": {
+        "English": "assets/audio/sa/cape-town/common.mp3",
+        "Hindi":   "assets/audio/sa/cape-town/common.mp3",
+        "Chinese": "assets/audio/sa/cape-town/common.mp3"
+      }
+    }
+  ]
+}
