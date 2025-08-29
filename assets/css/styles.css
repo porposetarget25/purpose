@@ -580,7 +580,7 @@ body {
 .nav__link {
   white-space: nowrap;   /* prevent line break */
   display: inline-block; /* keeps it in one row */
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 .nav__link:hover { background: #f3f4f6; }
 .nav__link.is-active {

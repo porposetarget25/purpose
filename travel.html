@@ -10,7 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#0a3d62">
+
     <style>
+        /* Keep “Travel & Safety” in one line in the top nav */
+        .topbar .nav__link { white-space: nowrap; }
+
         /* Small page-specific polish */
         .ts-hero { position: relative; overflow: hidden; border-radius: 20px; margin: 20px auto; }
         .ts-hero .hero__media { filter: brightness(0.85) saturate(110%); }
@@ -23,7 +27,11 @@
         .ts-muted { color:#6b7280; font-size: .9rem; }
         .ts-badge { display:inline-block; padding:6px 10px; border-radius:999px; background:#eef5ff; color:#1d4ed8; font-weight:600; font-size:.8rem; }
         .ts-note { background:#fff8d8; border:1px solid #f2e7a8; color:#6b5f02; padding:10px 12px; border-radius:12px; font-size:.9rem; }
-        @media (max-width: 860px) { .ts-wrap { padding: 12px; } }
+        .ts-list { margin:0; padding-left: 18px; }
+        .ts-list li { margin: 6px 0; }
+        .ts-kv { display:grid; grid-template-columns: 140px 1fr; gap:8px 14px; }
+        .ts-kv b { color:#374151; }
+        @media (max-width: 860px) { .ts-wrap { padding: 12px; } .ts-kv { grid-template-columns: 120px 1fr; } }
     </style>
 </head>
 
@@ -60,106 +68,204 @@
     <!-- Controls -->
     <div class="ts-controls">
         <span class="ts-badge">Select a country</span>
-        <select id="country-select" class="ts-select" aria-label="Select a country">
-            <!-- Filled by JS -->
-        </select>
-        <span class="ts-muted">Tip: information here is a helpful summary, not legal advice. Double-check before you travel.</span>
+        <select id="country-select" class="ts-select" aria-label="Select a country"></select>
+        <span class="ts-muted">Tip: this is a helpful summary, not legal advice. Always double-check with official sources.</span>
     </div>
 
     <!-- Output cards -->
-    <section id="ts-output">
-        <!-- Filled by JS -->
-    </section>
+    <section id="ts-output"></section>
 </main>
 
-<!-- keep your existing markup; replace the <script> content with this: -->
 <script>
+    /* =========================
+       Travel & Safety (static)
+       ========================= */
+
     const selectEl = document.getElementById('country-select');
     const out = document.getElementById('ts-output');
 
-    // Countries to offer in the dropdown (start small, you can add all later)
-    const COUNTRIES = ["Turkey","India","USA","UAE","New Zealand","United Kingdom","Japan","Singapore","France","Italy","Spain","Australia","Canada"];
+    /* Countries: use ISO alpha-2 codes (stable for RestCountries) */
+    const COUNTRIES = [
+      { code: "TR", name: "Turkey" },
+      { code: "IN", name: "India" },
+      { code: "AE", name: "UAE" },
+      { code: "US", name: "USA" },
+      { code: "GB", name: "United Kingdom" },
+      { code: "NZ", name: "New Zealand" },
+      { code: "JP", name: "Japan" },
+      { code: "SG", name: "Singapore" },
+      { code: "FR", name: "France" },
+      { code: "IT", name: "Italy" },
+      { code: "ES", name: "Spain" },
+      { code: "AU", name: "Australia" },
+      { code: "CA", name: "Canada" }
+    ];
 
-    function countryOptionTpl(name) { return `<option value="${name}">${name}</option>`; }
+    /* Emergency numbers for common destinations */
+    const EMERGENCY = {
+      TR: { police: "155", ambulance: "112", fire: "110" },
+      IN: { police: "112", ambulance: "108", fire: "101" },
+      AE: { police: "999", ambulance: "998", fire: "997" },
+      US: { police: "911", ambulance: "911", fire: "911" },
+      GB: { police: "999 / 112", ambulance: "999 / 112", fire: "999 / 112" },
+      NZ: { police: "111", ambulance: "111", fire: "111" },
+      JP: { police: "110", ambulance: "119", fire: "119" },
+      SG: { police: "999", ambulance: "995", fire: "995" },
+      FR: { police: "17", ambulance: "15 (SAMU)", fire: "18" },
+      IT: { police: "112", ambulance: "118", fire: "115" },
+      ES: { police: "112", ambulance: "112", fire: "112" },
+      AU: { police: "000", ambulance: "000", fire: "000" },
+      CA: { police: "911", ambulance: "911", fire: "911" }
+    };
 
-    function sectionTpl(title, items) {
-      const list = (items || []).map(i => `<li>${i}</li>`).join("");
-      return `<article class="ts-card"><h3>${title}</h3><ul>${list}</ul></article>`;
-    }
-
-    function renderLoading(name) {
-      out.innerHTML = `
-        <article class="ts-card">
-          Loading travel & safety info for <strong>${name}</strong>…
-        </article>`;
-    }
-
-    function renderError(name, msg) {
-      out.innerHTML = `
-        <article class="ts-card ts-note">
-          Couldn’t load info for <strong>${name}</strong>. ${msg || "Please try again."}
-        </article>`;
-    }
-
-    function renderCountryData(d) {
-      out.innerHTML = `
-        <div class="ts-muted" style="margin:6px 0">${d.country} • Updated: ${d.updated_at}</div>
-        ${sectionTpl("1) Visa & Entry Requirements", d.visa)}
-        ${sectionTpl("2) Local Laws & Rules", d.laws)}
-        ${sectionTpl("3) Safety & Security", d.safety)}
-        ${sectionTpl("4) Emergency Numbers", d.emergency)}
-        ${sectionTpl("5) Health Precautions", d.health)}
-        <article class="ts-card ts-note">${d.disclaimer}</article>
-      `;
-    }
-
-    // 24h local cache
+    /* ---- Small helpers ---- */
     const TTL_MS = 24 * 60 * 60 * 1000;
-    function cacheKey(country) { return `ts:${country.toLowerCase()}`; }
+    const ck = (code) => `ts:c:${code}`;
 
-    function getCached(country) {
+    function getCached(code) {
       try {
-        const raw = localStorage.getItem(cacheKey(country));
+        const raw = localStorage.getItem(ck(code));
         if (!raw) return null;
         const obj = JSON.parse(raw);
         if (Date.now() - obj.saved > TTL_MS) return null;
         return obj.data;
       } catch { return null; }
     }
-
-    function setCached(country, data) {
-      try {
-        localStorage.setItem(cacheKey(country), JSON.stringify({ saved: Date.now(), data }));
-      } catch {}
+    function setCached(code, data) {
+      try { localStorage.setItem(ck(code), JSON.stringify({ saved: Date.now(), data })); } catch {}
     }
 
-    async function fetchCountry(country) {
-      const cached = getCached(country);
+    function sectionTpl(title, items) {
+      const list = (items || []).map(i => `<li>${i}</li>`).join("");
+      return `<article class="ts-card"><h3>${title}</h3><ul class="ts-list">${list}</ul></article>`;
+    }
+
+    function renderLoading(label) {
+      out.innerHTML = `<article class="ts-card">Loading travel & safety info for <strong>${label}</strong>…</article>`;
+    }
+    function renderError(label, msg) {
+      out.innerHTML = `<article class="ts-card ts-note">Couldn’t load info for <strong>${label}</strong>. ${msg || "Please try again."}</article>`;
+    }
+
+    function renderCountryData(label, summary, code) {
+      const e = EMERGENCY[code] || {};
+      const updated = new Date().toLocaleString();
+
+      const quick = `
+        <article class="ts-card">
+          <div class="ts-kv">
+            <b>Official</b><span>${summary.officialName}</span>
+            <b>Capital</b><span>${summary.capital}</span>
+            <b>Region</b><span>${summary.region}${summary.subregion ? " — " + summary.subregion : ""}</span>
+            <b>Languages</b><span>${summary.languages}</span>
+            <b>Currency</b><span>${summary.currency}</span>
+            <b>Dial code</b><span>${summary.callingCode}</span>
+          </div>
+        </article>`;
+
+      const visa = [
+        `Passport validity: aim for <b>6+ months</b> beyond arrival.`,
+        `Check official visa policy for ${label}: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " visa requirements official")}">search</a> or your embassy.`,
+        `Many countries require <b>onward ticket</b> and <b>proof of funds</b>.`,
+        `Travel insurance is strongly recommended (medical + trip cover).`
+      ];
+
+      const laws = [
+        `Follow local laws and customs; penalties can be severe.`,
+        `Alcohol rules vary (age, where you can drink).`,
+        `Photography: avoid <b>government, military</b> or sensitive sites.`,
+        `Drones often need permits; check rules before flying.`
+      ];
+
+      const safety = [
+        `Stick to well-lit, populated areas; safeguard valuables.`,
+        `Use licensed taxis or well-rated ride-hailing apps.`,
+        `Beware of common scams in tourist zones; verify prices in advance.`,
+        `Keep copies of documents (passport, visa, insurance).`
+      ];
+
+      const emergency = [
+        `Police: <b>${e.police || "See local number"}</b>`,
+        `Ambulance: <b>${e.ambulance || "See local number"}</b>`,
+        `Fire: <b>${e.fire || "See local number"}</b>`,
+        `Locate your embassy/consulate: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " embassy contact")}">find contact</a>`
+      ];
+
+      const health = [
+        `Check vaccine advice: <a target="_blank" rel="noopener" href="https://wwwnc.cdc.gov/travel">CDC Travel Health</a> / <a target="_blank" rel="noopener" href="https://travelhealthpro.org.uk/countries">UK TravelHealthPro</a>.`,
+        `Drink bottled/treated water where tap water isn’t potable.`,
+        `Carry any prescription meds in original packaging + copy of prescription.`,
+        `Know nearest hospitals/clinics in your area.`
+      ];
+
+      const disclaimer = `
+        <article class="ts-card ts-note">
+          This page is an informational summary only (updated: ${updated}). Rules change often—always verify with official sources before you travel.
+        </article>`;
+
+      out.innerHTML = `
+        <div class="ts-muted" style="margin:6px 0">${label}</div>
+        ${quick}
+        ${sectionTpl("1) Visa & Entry Requirements", visa)}
+        ${sectionTpl("2) Local Laws & Rules", laws)}
+        ${sectionTpl("3) Safety & Security", safety)}
+        ${sectionTpl("4) Emergency Numbers", emergency)}
+        ${sectionTpl("5) Health Precautions", health)}
+        ${disclaimer}
+      `;
+    }
+
+    /* Fetch country basics from RestCountries (alpha code) */
+    async function fetchCountrySummary(code) {
+      const cached = getCached(code);
       if (cached) return cached;
 
-      const resp = await fetch(`/api/travel-safety?country=${encodeURIComponent(country)}`);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const json = await resp.json();
-      setCached(country, json);
-      return json;
+      const url = `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const [c] = await res.json();
+
+      const data = {
+        officialName: c?.name?.official || "—",
+        capital: (c?.capital && c.capital[0]) || "—",
+        region: c?.region || "—",
+        subregion: c?.subregion || "",
+        languages: c?.languages ? Object.values(c.languages).join(", ") : "—",
+        currency: c?.currencies ? Object.keys(c.currencies)[0] : "—",
+        callingCode:
+          c?.idd?.root
+            ? c.idd.root + ((c.idd.suffixes && c.idd.suffixes[0]) || "")
+            : "—"
+      };
+
+      setCached(code, data);
+      return data;
     }
 
-    async function showCountry(country) {
-      renderLoading(country);
+    /* UI wiring */
+    function populateSelect() {
+      selectEl.innerHTML = COUNTRIES
+        .map(c => `<option value="${c.code}">${c.name}</option>`)
+        .join("");
+    }
+
+    async function showCountryByCode(code) {
+      const label = COUNTRIES.find(c => c.code === code)?.name || code;
+      renderLoading(label);
       try {
-        const data = await fetchCountry(country);
-        renderCountryData(data);
-      } catch (e) {
-        console.error(e);
-        renderError(country, "Check your connection or try again later.");
+        const summary = await fetchCountrySummary(code);
+        renderCountryData(label, summary, code);
+      } catch (err) {
+        console.error(err);
+        renderError(label, "Check your connection or try again later.");
       }
     }
 
-    // Init
-    selectEl.innerHTML = COUNTRIES.map(countryOptionTpl).join("");
-    showCountry(COUNTRIES[0]);
+    /* Init */
+    populateSelect();
+    showCountryByCode(COUNTRIES[0].code);
 
-    selectEl.addEventListener('change', () => showCountry(selectEl.value));
+    selectEl.addEventListener("change", () => showCountryByCode(selectEl.value));
 </script>
 
 </body>
