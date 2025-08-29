@@ -1,78 +1,135 @@
+// api/travel-safety.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import OpenAI from 'openai';
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY!;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*'; // set to your GH pages origin if you want
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const ALLOWED_ORIGINS = [
+  // Add your GitHub Pages domain here for best security, e.g.:
+  // 'https://yourname.github.io',
+];
+
+function corsHeaders(origin?: string) {
+  // Allow your pages host if specified, otherwise fall back to wildcard
+  const allowOrigin =
+    (origin && ALLOWED_ORIGINS.includes(origin) ? origin : '*');
+
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Methods': 'GET,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(204).end();
+  const origin = req.headers.origin as string | undefined;
+
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=86400');
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Credentials', 'false');
+    res.setHeader('Access-Control-Allow-Private-Network', 'true');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+    res.setHeader('Access-Control-Allow-Origin', corsHeaders(origin)['Access-Control-Allow-Origin']);
+    return res.status(204).end();
+  }
+
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET,OPTIONS');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const countryRaw = (req.query.country as string | undefined) || '';
+  const country = countryRaw.trim();
+  if (!country) {
+    res.setHeader('Access-Control-Allow-Origin', corsHeaders(origin)['Access-Control-Allow-Origin']);
+    return res.status(400).json({ error: 'Missing ?country=COUNTRY_NAME' });
+  }
 
   try {
-    const country = String(req.query.country || '').trim();
-    if (!country) return res.status(400).json({ error: 'country is required' });
-    if (!OPENAI_API_KEY) return res.status(500).json({ error: 'Missing OPENAI_API_KEY' });
+    // Generate JSON with a fixed shape. We do NOT claim legal certainty.
+    const system = `
+You are a careful travel assistant. Output concise, practical advice for travelers.
+Do not fabricate specific legal details if unsure; prefer neutral wording like "Check official source" or "See local number".
+Keep tone clear and non-alarmist. Avoid long paragraphs. Use up-to-date general knowledge only.
+Always return strict JSON matching the schema with arrays of short bullet points.
+`;
 
-    // Build the system+user prompt (short, factual, globally useful)
-    const messages = [
-      {
-        role: "system",
-        content:
-          "You are a travel-safety assistant. Be concise, neutral, and practical. " +
-          "Return ONLY valid JSON that conforms exactly to the provided schema. " +
-          "Prefer globally applicable advice and include ‘official sources vary; verify before travel’ in disclaimer."
-      },
-      {
-        role: "user",
-        content:
-`Country: ${country}
-Return a JSON object with this schema:
+    const user = `
+Return a JSON object with this exact shape:
+
 {
   "country": string,
-  "updated_at": string, // ISO date
-  "visa": string[],     // 3-7 bullets
-  "laws": string[],     // 3-7 bullets
-  "safety": string[],   // 3-7 bullets (include common scams to avoid)
-  "emergency": string[],// 3-6 bullets (include Police/Ambulance/Fire if known or how to reach)
-  "health": string[],   // 3-7 bullets (vaccines, water, hospitals)
-  "disclaimer": string  // 1 sentence, include 'verify with official sources'
-}`
-      }
-    ];
+  "updated_at": ISO8601 date string (UTC),
+  "visa": string[] (3-6 concise bullets),
+  "laws": string[] (3-6 concise bullets),
+  "safety": string[] (3-6 concise bullets),
+  "emergency": string[] (police/ambulance/fire numbers or how to reach them; 2-4 bullets),
+  "health": string[] (vaccines, hospitals, water safety; 3-6 bullets),
+  "disclaimer": string (one sentence reminding to verify with official sources)
+}
 
-    // Call OpenAI
-    const r = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0.4,
-        messages
-      })
+The country is: "${country}".
+
+Formatting rules:
+- No markdown. JSON only.
+- Each bullet point should be one sentence, practical and clear.
+- If you are not confident in a specific number (e.g., an emergency code), write "See official number" or "Dial the local emergency number".
+`;
+
+    const response = await client.chat.completions.create({
+      // "gpt-4o-mini" is fast & inexpensive; adjust if you prefer a different model
+      model: 'gpt-4o-mini',
+      temperature: 0.2,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: user },
+      ],
     });
 
-    if (!r.ok) {
-      const text = await r.text();
-      return res.status(r.status).json({ error: "OpenAI error", details: text });
+    const jsonText = response.choices?.[0]?.message?.content || '{}';
+    let data: any;
+    try {
+      data = JSON.parse(jsonText);
+    } catch {
+      // Fallback shape if model ever returns malformed JSON
+      data = {
+        country,
+        updated_at: new Date().toISOString(),
+        visa: ['Check official sources for latest visa rules.'],
+        laws: ['Follow local regulations and cultural norms.'],
+        safety: ['Stay aware of surroundings and avoid isolated areas at night.'],
+        emergency: ['Dial the local emergency number or contact nearest police station.'],
+        health: ['Consult a travel clinic for recommended vaccines.'],
+        disclaimer: 'This is general guidance; verify details with official sources before you travel.',
+      };
     }
 
-    const data = await r.json();
-    let content = data.choices?.[0]?.message?.content || "";
-    // Safety net: try to parse JSON; if the model wrapped in code fences, strip them
-    content = content.trim().replace(/^```json\s*/i, "").replace(/```$/i, "");
-    let json: any;
-    try { json = JSON.parse(content); }
-    catch { return res.status(502).json({ error: "Bad JSON from model", content }); }
+    // Minimal shape guard
+    data.country = data.country || country;
+    data.updated_at = data.updated_at || new Date().toISOString();
 
-    // normalize + add timestamp if missing
-    json.country = json.country || country;
-    json.updated_at = json.updated_at || new Date().toISOString();
+    // CORS + caching
+    const headers = {
+      ...corsHeaders(origin),
+      'Content-Type': 'application/json; charset=utf-8',
+      // Cache at the edge for 24h, allow SWR
+      'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400',
+      Vary: 'Origin',
+    };
+    Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v as string));
 
-    // cache-friendly headers (optional)
-    res.setHeader('Cache-Control', 'public, s-maxage=21600, max-age=3600'); // edge 6h, browser 1h
-    return res.status(200).json(json);
-  } catch (e: any) {
-    return res.status(500).json({ error: e?.message || 'Server error' });
+    return res.status(200).send(JSON.stringify(data));
+  } catch (err: any) {
+    console.error('travel-safety error:', err);
+    res.setHeader('Access-Control-Allow-Origin', corsHeaders(origin)['Access-Control-Allow-Origin']);
+    return res.status(500).json({ error: 'Failed to fetch travel & safety info.' });
   }
 }
