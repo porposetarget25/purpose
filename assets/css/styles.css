@@ -576,10 +576,11 @@ body {
 .brand__text { display: grid; line-height: 1.1; }
 .brand__text small { color: #6b7280; font-weight: 600; font-size: 12px; }
 
-.nav { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
+.nav { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0;gap: 1.5rem;  }
 .nav__link {
-  font-size: 0.9rem;   /* smaller than before */
-  padding: 6px 12px;   /* less padding */
+  white-space: nowrap;   /* prevent line break */
+  display: inline-block; /* keeps it in one row */
+  font-size: 0.75rem;
 }
 .nav__link:hover { background: #f3f4f6; }
 .nav__link.is-active {

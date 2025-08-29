@@ -72,195 +72,95 @@
     </section>
 </main>
 
+<!-- keep your existing markup; replace the <script> content with this: -->
 <script>
-    /* ========= Data seed (extend any time) ========= */
-    const DATA = {
-      "Turkey": {
-        visa: [
-          "Visa policy depends on nationality. Some travelers are visa-exempt or eligible for an e-Visa.",
-          "Typical passport validity requested: at least 6 months beyond arrival.",
-          "Strongly consider travel insurance covering medical care & trip disruptions."
-        ],
-        laws: [
-          "Public conduct: be respectful around religious sites; modest dress is recommended in mosques.",
-          "Alcohol is legal (18+). Public intoxication is discouraged; regulations vary by municipality.",
-          "Photography: avoid military or government facilities without permission."
-        ],
-        safety: [
-          "Urban centers are busy; keep valuables secure against petty theft.",
-          "Use licensed taxis or reputable ride-hailing apps.",
-          "Beware common scams (overpriced tours, unsolicited help)."
-        ],
-        emergency: [
-          "Unified Emergency: 112 (Police/Fire/Ambulance).",
-          "Keep your embassy/consulate details handy."
-        ],
-        health: [
-          "Routine vaccines up to date. Consider Hepatitis A if eating street food.",
-          "Tap water quality varies—bottled water is common.",
-          "Major cities have good hospitals; carry any prescriptions with generic names."
-        ]
-      },
-
-      "India": {
-        visa: [
-          "Most nationalities require a visa or e-Visa—check the official Indian visa portal.",
-          "Passport validity typically 6 months beyond arrival, with blank pages.",
-          "Travel insurance recommended (medical + evacuation)."
-        ],
-        laws: [
-          "Local alcohol rules vary by state; check local regulations.",
-          "Public displays of affection may attract attention in some areas.",
-          "Photography: avoid government/military facilities; always ask before photographing people."
-        ],
-        safety: [
-          "In crowded areas, watch for pickpockets & bag snatching.",
-          "Prefer registered taxis/ride-hailing; avoid unmarked vehicles.",
-          "Beware scams (fake ticket offices, unsolicited guides)."
-        ],
-        emergency: [
-          "All emergencies: 112. Police: 100. Ambulance: 102 or 108. Fire: 101.",
-          "Save your embassy/consulate contacts."
-        ],
-        health: [
-          "Consider Hep A, Typhoid; ensure routine vaccines are current.",
-          "Drink sealed bottled water; avoid ice of unknown source.",
-          "Carry basic meds; reputable private hospitals in major cities."
-        ]
-      },
-
-      "USA": {
-        visa: [
-          "Visa or ESTA (for eligible nationalities) required depending on passport.",
-          "Passport validity should cover your stay; 6 months is commonly advised.",
-          "Medical care can be expensive—comprehensive insurance is essential."
-        ],
-        laws: [
-          "Legal drinking age is 21 nationwide.",
-          "Cannabis laws vary by state; federal rules still apply in airports.",
-          "Follow local driving and right-of-way laws; strict DUI enforcement."
-        ],
-        safety: [
-          "Tourist areas are generally safe; stay aware in unfamiliar neighborhoods.",
-          "Call 911 for emergencies; follow local advice during severe weather.",
-          "Avoid scams (fake tickets, phishing texts)."
-        ],
-        emergency: [
-          "911: Police, Fire, Ambulance (nationwide).",
-          "Keep digital and printed copies of ID/insurance details."
-        ],
-        health: [
-          "Routine vaccines up to date.",
-          "Tap water generally safe unless local advisories say otherwise.",
-          "Carry any prescriptions in original containers."
-        ]
-      },
-
-      "UAE": {
-        visa: [
-          "Visa policy varies by nationality; many receive visa-on-arrival.",
-          "Passport typically must be valid 6 months from entry date.",
-          "Travel insurance recommended."
-        ],
-        laws: [
-          "Strict laws around public decency; avoid public intoxication.",
-          "Alcohol allowed in licensed venues (legal age often 21; rules vary by emirate).",
-          "Photography: avoid government/military sites and photographing strangers without consent."
-        ],
-        safety: [
-          "Generally very safe with low crime rates.",
-          "Traffic can be fast—use marked crossings and licensed taxis/ride-hailing.",
-          "Be cautious of ‘too good to be true’ offers."
-        ],
-        emergency: [
-          "Police: 999. Ambulance: 998. Fire: 997.",
-          "Know your embassy/consulate details."
-        ],
-        health: [
-          "Routine vaccines current; heat exposure is a risk—hydrate well.",
-          "Tap water is treated; many visitors prefer bottled water.",
-          "Modern hospitals/clinics widely available."
-        ]
-      },
-
-      "New Zealand": {
-        visa: [
-          "NZeTA or visa may be required depending on nationality.",
-          "Passport should generally be valid 3–6 months beyond travel; check current rules.",
-          "Travel insurance recommended for outdoor activities."
-        ],
-        laws: [
-          "Legal drinking age is 18.",
-          "Strict biosecurity: declare food, plants, outdoor gear (clean) on arrival.",
-          "Respect private land; follow DOC (Dept. of Conservation) rules."
-        ],
-        safety: [
-          "Low crime; use common sense in cities and trailhead car parks.",
-          "Weather changes quickly—check conditions before hikes/sea activities.",
-          "Drive carefully on narrow/twisty roads; keep left."
-        ],
-        emergency: [
-          "111: Police, Fire, Ambulance.",
-          "Consider registering detailed trip plans for remote hikes."
-        ],
-        health: [
-          "Routine vaccines up to date.",
-          "Tap water is generally safe.",
-          "Well-distributed hospitals/urgent care; remote areas can be far from services."
-        ]
-      }
-    };
-
-    /* ========= UI rendering ========= */
     const selectEl = document.getElementById('country-select');
     const out = document.getElementById('ts-output');
 
-    function countryOptionTpl(name) {
-      return `<option value="${name}">${name}</option>`;
-    }
+    // Countries to offer in the dropdown (start small, you can add all later)
+    const COUNTRIES = ["Turkey","India","USA","UAE","New Zealand","United Kingdom","Japan","Singapore","France","Italy","Spain","Australia","Canada"];
+
+    function countryOptionTpl(name) { return `<option value="${name}">${name}</option>`; }
 
     function sectionTpl(title, items) {
-      const list = items.map(i => `<li>${i}</li>`).join("");
-      return `
-        <article class="ts-card">
-          <h3>${title}</h3>
-          <ul>${list}</ul>
-        </article>
-      `;
+      const list = (items || []).map(i => `<li>${i}</li>`).join("");
+      return `<article class="ts-card"><h3>${title}</h3><ul>${list}</ul></article>`;
     }
 
-    function renderCountry(name) {
-      const d = DATA[name];
-      if (!d) {
-        out.innerHTML = `
-          <article class="ts-card ts-note">
-            We don’t have a summary for <strong>${name}</strong> yet.
-            Please check your government travel advisories and the destination’s official site.
-          </article>`;
-        return;
-      }
-
+    function renderLoading(name) {
       out.innerHTML = `
+        <article class="ts-card">
+          Loading travel & safety info for <strong>${name}</strong>…
+        </article>`;
+    }
+
+    function renderError(name, msg) {
+      out.innerHTML = `
+        <article class="ts-card ts-note">
+          Couldn’t load info for <strong>${name}</strong>. ${msg || "Please try again."}
+        </article>`;
+    }
+
+    function renderCountryData(d) {
+      out.innerHTML = `
+        <div class="ts-muted" style="margin:6px 0">${d.country} • Updated: ${d.updated_at}</div>
         ${sectionTpl("1) Visa & Entry Requirements", d.visa)}
         ${sectionTpl("2) Local Laws & Rules", d.laws)}
         ${sectionTpl("3) Safety & Security", d.safety)}
         ${sectionTpl("4) Emergency Numbers", d.emergency)}
         ${sectionTpl("5) Health Precautions", d.health)}
-        <article class="ts-card ts-note">
-          <strong>Important:</strong> Policies change frequently. Always verify with official
-          government sources and your airline before you travel.
-        </article>
+        <article class="ts-card ts-note">${d.disclaimer}</article>
       `;
     }
 
-    /* ========= Init ========= */
-    const countryNames = Object.keys(DATA).sort();
-    selectEl.innerHTML = countryNames.map(countryOptionTpl).join("");
-    renderCountry(countryNames[0]);
+    // 24h local cache
+    const TTL_MS = 24 * 60 * 60 * 1000;
+    function cacheKey(country) { return `ts:${country.toLowerCase()}`; }
 
-    selectEl.addEventListener('change', () => {
-      renderCountry(selectEl.value);
-    });
+    function getCached(country) {
+      try {
+        const raw = localStorage.getItem(cacheKey(country));
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (Date.now() - obj.saved > TTL_MS) return null;
+        return obj.data;
+      } catch { return null; }
+    }
+
+    function setCached(country, data) {
+      try {
+        localStorage.setItem(cacheKey(country), JSON.stringify({ saved: Date.now(), data }));
+      } catch {}
+    }
+
+    async function fetchCountry(country) {
+      const cached = getCached(country);
+      if (cached) return cached;
+
+      const resp = await fetch(`/api/travel-safety?country=${encodeURIComponent(country)}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const json = await resp.json();
+      setCached(country, json);
+      return json;
+    }
+
+    async function showCountry(country) {
+      renderLoading(country);
+      try {
+        const data = await fetchCountry(country);
+        renderCountryData(data);
+      } catch (e) {
+        console.error(e);
+        renderError(country, "Check your connection or try again later.");
+      }
+    }
+
+    // Init
+    selectEl.innerHTML = COUNTRIES.map(countryOptionTpl).join("");
+    showCountry(COUNTRIES[0]);
+
+    selectEl.addEventListener('change', () => showCountry(selectEl.value));
 </script>
+
 </body>
 </html>
