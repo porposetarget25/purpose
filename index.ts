@@ -1,46 +1,72 @@
-// src/worker.ts (or index.ts)
 export default {
-  async fetch(req: Request, env: { OPENAI_API_KEY: string }) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
-    if (url.pathname !== "/api/travel-safety") {
-      return new Response("Not found", { status: 404 });
+
+    // CORS preflight
+    if (req.method === "OPTIONS") {
+      return handleOptions(req);
     }
 
-    const country = url.searchParams.get("country") ?? "Turkey";
-    const prompt = `
-Return concise travel info for ${country} as JSON with keys:
-country, updated_at, visa[], laws[], safety[], emergency[], health[], disclaimer.
-Keep each bullet short and factual.
-`;
+    try {
+      if (url.pathname === "/api/travel-safety") {
+        const country = url.searchParams.get("country") || "TR";
 
-    const body = {
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a precise travel-safety assistant." },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.2
-    };
+        // TODO: your existing logic to build the JSON payload
+        // e.g. call OpenAI / RestCountries / merge data, etc.
+        const data = {
+          country,
+          updated_at: new Date().toISOString(),
+          visa: ["..."],
+          laws: ["..."],
+          safety: ["..."],
+          emergency: ["Police: 155", "Ambulance: 112", "Fire: 110"],
+          health: ["..."],
+          disclaimer:
+            "Info can change. Verify with official sources before you travel."
+        };
 
-    const r = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
+        return json(data, req);
+      }
 
-    if (!r.ok) {
-      return new Response(JSON.stringify({ error: `OpenAI error: ${r.status}` }), {
-        status: 502,
-        headers: { "Content-Type": "application/json" }
-      });
+      return new Response("Not Found", { status: 404, headers: corsHeaders(req) });
+    } catch (err) {
+      return json({ error: "Internal error", detail: String(err) }, req, 500);
     }
-
-    const data = await r.json();
-    // expect JSON in assistant message
-    const text = data.choices?.[0]?.message?.content ?? "{}";
-    return new Response(text, { headers: { "Content-Type": "application/json" } });
   }
-};
+}
+
+/* ---------- helpers ---------- */
+
+function corsHeaders(req) {
+  // reflect the origin so it works for both localhost and GitHub Pages
+  const origin = req.headers.get("Origin") || "*";
+
+  // If you want to allow only specific origins, do:
+  // const allowlist = new Set(["http://127.0.0.1:5500", "https://porposetarget25.github.io"]);
+  // const origin = allowlist.has(req.headers.get("Origin")) ? req.headers.get("Origin") : "https://porposetarget25.github.io";
+
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Vary": "Origin",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    // only include this if you ever use cookies/credentials:
+    // "Access-Control-Allow-Credentials": "true",
+    "Content-Type": "application/json; charset=utf-8"
+  };
+}
+
+function handleOptions(req) {
+  // Preflight response
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders(req)
+  });
+}
+
+function json(payload, req, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: corsHeaders(req)
+  });
+}

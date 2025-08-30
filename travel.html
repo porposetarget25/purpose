@@ -222,8 +222,9 @@
       const cached = getCached(code);
       if (cached) return cached;
 
-      const url = `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`;
+      const url = `https://purpose.porpose-target-25.workers.dev/api/travel-safety?country=${encodeURIComponent(code)}`;
       const res = await fetch(url, { cache: "no-store" });
+
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const [c] = await res.json();
 
