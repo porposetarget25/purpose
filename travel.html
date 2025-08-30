@@ -75,12 +75,10 @@
     <!-- Output cards -->
     <section id="ts-output"></section>
 </main>
-
 <script>
     /* =========================
        Travel & Safety (AI + fallback)
        ========================= */
-
     const selectEl = document.getElementById('country-select');
     const out = document.getElementById('ts-output');
 
@@ -122,8 +120,8 @@
 
     /* ---- Small helpers ---- */
     const TTL_MS = 24 * 60 * 60 * 1000;
+    const ckWorker = (code) => `ts:worker:${code}`;
     const ckSummary = (code) => `ts:summary:${code}`;
-    const ckAI      = (code) => `ts:ai:${code}`;
 
     function getCached(key) {
       try {
@@ -154,10 +152,24 @@
        DATA FETCHERS
        ========================= */
 
-    // Quick facts from RestCountries (not GPT)
+    // 1) Preferred: your Cloudflare Worker (returns { country, code, updated_at, basics, advice })
+    async function fetchFromWorker(code) {
+      const key = ckWorker(code);
+      const cached = getCached(key);
+      if (cached) return cached;
+
+      const url = `https://purpose.porpose-target-25.workers.dev/api/travel-safety?country=${encodeURIComponent(code)}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Worker HTTP ${res.status}`);
+      const json = await res.json(); // {country, code, updated_at, basics, advice?}
+      setCached(key, json);
+      return json;
+    }
+
+    // 2) Fallback: RestCountries for quick facts if Worker fails
     async function fetchCountrySummary(code) {
-      const cacheKey = ckSummary(code);
-      const cached = getCached(cacheKey);
+      const key = ckSummary(code);
+      const cached = getCached(key);
       if (cached) return cached;
 
       const url = `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`;
@@ -177,87 +189,71 @@
             ? c.idd.root + ((c.idd.suffixes && c.idd.suffixes[0]) || "")
             : "—"
       };
-
-      setCached(cacheKey, data);
+      setCached(key, data);
       return data;
-    }
-
-    // GPT/Worker policy sections
-    async function fetchPoliciesFromWorker(code) {
-      const cacheKey = ckAI(code);
-      const cached = getCached(cacheKey);
-      if (cached) return cached;
-
-      const url = `https://purpose.porpose-target-25.workers.dev/api/travel-safety?country=${encodeURIComponent(code)}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Worker HTTP ${res.status}`);
-      const json = await res.json();
-
-      setCached(cacheKey, json);
-      return json;
     }
 
     /* =========================
        RENDER
        ========================= */
 
-    function renderCountryData(label, summary, code, ai) {
-      const e = EMERGENCY[code] || {};
-      const updatedLocal = new Date().toLocaleString();
+    function renderCountryData(label, basics, code, advice, updated_at) {
+      const updatedLocal = new Date(updated_at || Date.now()).toLocaleString();
 
       const quick = `
         <article class="ts-card">
           <div class="ts-kv">
-            <b>Official</b><span>${summary.officialName}</span>
-            <b>Capital</b><span>${summary.capital}</span>
-            <b>Region</b><span>${summary.region}${summary.subregion ? " — " + summary.subregion : ""}</span>
-            <b>Languages</b><span>${summary.languages}</span>
-            <b>Currency</b><span>${summary.currency}</span>
-            <b>Dial code</b><span>${summary.callingCode}</span>
+            <b>Official</b><span>${basics.officialName}</span>
+            <b>Capital</b><span>${basics.capital}</span>
+            <b>Region</b><span>${basics.region}${basics.subregion ? " — " + basics.subregion : ""}</span>
+            <b>Languages</b><span>${basics.languages}</span>
+            <b>Currency</b><span>${basics.currency}</span>
+            <b>Dial code</b><span>${basics.callingCode}</span>
           </div>
         </article>`;
 
-      // If AI (Worker) responded, use it; else fall back to local lists
-      const visa      = ai?.visa      ?? [
+      // advice.* from Worker OR fallbacks
+      const visa   = advice?.visa   ?? [
         `Passport validity: aim for <b>6+ months</b> beyond arrival.`,
-        `Check official visa policy for ${label}: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " visa requirements official")}">search</a> or your embassy.`,
-        `Many countries require <b>onward ticket</b> and <b>proof of funds</b>.`,
-        `Travel insurance is strongly recommended (medical + trip cover).`
+        `Check official visa policy for ${label} (government/embassy).`,
+        `Onward ticket & proof of funds may be required.`,
+        `Travel insurance is strongly recommended.`
       ];
-      const laws      = ai?.laws      ?? [
-        `Follow local laws and customs; penalties can be severe.`,
-        `Alcohol rules vary (age, where you can drink).`,
-        `Photography: avoid <b>government, military</b> or sensitive sites.`,
-        `Drones often need permits; check rules before flying.`
+      const laws   = advice?.laws   ?? [
+        `Respect local laws and customs; penalties can be severe.`,
+        `Alcohol rules vary by place and age.`,
+        `Avoid photographing military/government sites.`,
+        `Drones often need permits.`
       ];
-      const safety    = ai?.safety    ?? [
-        `Stick to well-lit, populated areas; safeguard valuables.`,
-        `Use licensed taxis or well-rated ride-hailing apps.`,
-        `Beware of common scams in tourist zones; verify prices in advance.`,
-        `Keep copies of documents (passport, visa, insurance).`
+      const safety = advice?.safety ?? [
+        `Stick to well-lit, busy areas; secure valuables.`,
+        `Use licensed taxis or reputable ride-hailing.`,
+        `Beware of common scams in tourist spots.`,
+        `Keep copies of passport/visa/insurance.`
       ];
-      const emergency = ai?.emergency ?? [
-        `Police: <b>${e.police || "See local number"}</b>`,
-        `Ambulance: <b>${e.ambulance || "See local number"}</b>`,
-        `Fire: <b>${e.fire || "See local number"}</b>`,
-        `Locate your embassy/consulate: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " embassy contact")}">find contact</a>`
-      ];
-      const health    = ai?.health    ?? [
-        `Check vaccine advice: <a target="_blank" rel="noopener" href="https://wwwnc.cdc.gov/travel">CDC Travel Health</a> / <a target="_blank" rel="noopener" href="https://travelhealthpro.org.uk/countries">UK TravelHealthPro</a>.`,
-        `Drink bottled/treated water where tap water isn’t potable.`,
-        `Carry any prescription meds in original packaging + copy of prescription.`,
-        `Know nearest hospitals/clinics in your area.`
+      const health = advice?.health ?? [
+        `Review vaccine guidance (CDC / TravelHealthPro).`,
+        `Drink treated/bottled water where tap isn’t potable.`,
+        `Carry prescriptions in original packaging.`,
+        `Know nearby hospitals/clinics.`
       ];
 
-      const aiBadge = ai?.source === "ai"
-        ? `<span class="ts-badge" title="Generated by ${ai.model || 'AI'}">AI-generated</span>`
-        : "";
+      // emergency_numbers from advice, else map fallback
+      const en = advice?.emergency_numbers;
+      const fallback = EMERGENCY[code] || {};
+      const emergencyList = [
+        `Police: <b>${(en && en.police) || fallback.police || "Check locally"}</b>`,
+        `Ambulance: <b>${(en && en.ambulance) || fallback.ambulance || "Check locally"}</b>`,
+        `Fire: <b>${(en && en.fire) || fallback.fire || "Check locally"}</b>`,
+        ...((en && Array.isArray(en.notes)) ? en.notes : [])
+      ];
+
+      const aiBadge = advice ? `<span class="ts-badge" title="Generated by AI">AI-generated</span>` : `<span class="ts-badge" title="Fallback guidance">Fallback</span>`;
 
       const disclaimer = `
         <article class="ts-card ts-note">
-          Source: ${ai?.source || 'local fallback'} ${aiBadge}
-          • Updated: ${ai?.updated_at ? new Date(ai.updated_at).toLocaleString() : updatedLocal}.
-          Rules change—verify with official sources before you travel.
+          Source: ${advice ? 'AI (via Worker)' : 'local fallback'} ${aiBadge}
+          • Updated: ${updatedLocal}. Always verify with official sources.
         </article>`;
 
       out.innerHTML = `
@@ -266,7 +262,7 @@
         ${sectionTpl("1) Visa & Entry Requirements", visa)}
         ${sectionTpl("2) Local Laws & Rules", laws)}
         ${sectionTpl("3) Safety & Security", safety)}
-        ${sectionTpl("4) Emergency Numbers", emergency)}
+        ${sectionTpl("4) Emergency Numbers", emergencyList)}
         ${sectionTpl("5) Health Precautions", health)}
         ${disclaimer}
       `;
@@ -286,23 +282,32 @@
       const label = COUNTRIES.find(c => c.code === code)?.name || code;
       renderLoading(label);
       try {
-        const [summary, ai] = await Promise.all([
-          fetchCountrySummary(code),
-          fetchPoliciesFromWorker(code).catch(() => null) // don’t block UI on AI failure
-        ]);
-        renderCountryData(label, summary, code, ai);
+        // Prefer Worker (gives both basics + advice). If Worker fails, fall back to RestCountries.
+        let payload;
+        try {
+          payload = await fetchFromWorker(code); // {country, code, updated_at, basics, advice?}
+        } catch {
+          payload = null;
+        }
+
+        if (payload?.basics) {
+          renderCountryData(label, payload.basics, code, payload.advice || null, payload.updated_at);
+        } else {
+          // Worker failed: fetch basics only, no AI advice
+          const basics = await fetchCountrySummary(code);
+          renderCountryData(label, basics, code, null, null);
+        }
       } catch (err) {
         console.error(err);
         renderError(label, "Check your connection or try again later.");
       }
     }
 
-    /* Init */
+    // Init
     populateSelect();
     showCountryByCode(COUNTRIES[0].code);
     selectEl.addEventListener("change", () => showCountryByCode(selectEl.value));
 </script>
-
 
 </body>
 </html>
