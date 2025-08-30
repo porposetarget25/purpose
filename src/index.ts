@@ -1,35 +1,82 @@
-// src/index.ts   (or functions/api/travel-safety.ts if you use Pages Functions)
+/**
+ * Cloudflare Worker / Pages Function
+ * Route: /api/travel-safety?country=FR
+ */
 export interface Env {
-  OPENAI_API_KEY: string;   // set this in Cloudflare → Workers → Settings → Variables
-  MODEL?: string;           // optional override, e.g. "gpt-4o-mini" or "gpt-4.1-mini"
+  OPENAI_API_KEY: string;       // set in Cloudflare → Workers → Settings → Variables
+  MODEL?: string;               // optional, e.g. "gpt-4.1-mini" (default "gpt-4o-mini")
 }
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",              // or your exact origin
+  "Access-Control-Allow-Origin": "*",           // or lock to your GitHub Pages origin
   "Access-Control-Allow-Methods": "GET,OPTIONS",
   "Access-Control-Allow-Headers": "*",
   "Content-Type": "application/json; charset=utf-8",
 };
 
-function ok(data: unknown, extra: Record<string, string> = {}) {
-  return new Response(JSON.stringify(data), { headers: { ...CORS, ...extra } });
-}
+const ok = (data: unknown, extra: Record<string, string> = {}) =>
+  new Response(JSON.stringify(data), { headers: { ...CORS, ...extra } });
 
-function err(status: number, message: string) {
-  return new Response(JSON.stringify({ error: message }), {
-    status,
-    headers: CORS,
-  });
-}
+const bad = (status: number, message: string, meta?: unknown) =>
+  new Response(JSON.stringify({ error: message, meta }), { status, headers: CORS });
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    if (request.method === "OPTIONS") return new Response(null, { headers: CORS });
+
+    const url = new URL(request.url);
+    // Support both /api/travel-safety and ?country=FR
+    const codeParam = url.searchParams.get("country") ?? url.searchParams.get("code");
+    const code = (codeParam || "").trim().toUpperCase();
+    if (!code) return bad(400, "Missing ?country=CC (ISO alpha-2)");
+
+    // 1) basics (RestCountries)
+    let basics;
+    let label = code;
+    try {
+      basics = await getBasics(code);
+      // Use official name for the prompt; fall back to code.
+      label = basics.officialName || code;
+    } catch (e: any) {
+      return bad(502, "Failed to fetch country basics", { reason: String(e) });
+    }
+
+    // 2) advice (OpenAI)
+    let advice: any = null;
+    let aiMeta: any = {};
+    try {
+      const model = env.MODEL || "gpt-4o-mini";
+      const ai = await getAdvice(env, model, label);
+      advice = ai.parsed;                    // may be null if parsing failed
+      aiMeta = { source: ai.source, model: ai.model, openai_status: ai.status };
+    } catch (e: any) {
+      // We still return basics; client will fall back to generic bullets.
+      aiMeta = { source: "ai_error", error: String(e) };
+    }
+
+    return ok({
+      country: label,
+      code,
+      updated_at: new Date().toISOString(),
+      basics,
+      advice,                // object or null
+      ...aiMeta
+    });
+  }
+} satisfies ExportedHandler<Env>;
+
+/* ---------- helpers ---------- */
 
 async function getBasics(code: string) {
-  const r = await fetch(`https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`, {
-    cf: { cacheTtl: 3600, cacheEverything: true },
-  });
+  const r = await fetch(
+    `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`,
+    { cf: { cacheTtl: 3600, cacheEverything: true } }
+  );
   if (!r.ok) throw new Error(`RestCountries HTTP ${r.status}`);
   const [c] = await r.json();
 
   return {
+    code,
     officialName: c?.name?.official ?? "—",
     capital: c?.capital?.[0] ?? "—",
     region: c?.region ?? "—",
@@ -40,44 +87,41 @@ async function getBasics(code: string) {
   };
 }
 
+// Extract JSON from plain text, fenced code, or loose braces
 function extractJson(text: string) {
-  // Try plain JSON first
   try { return JSON.parse(text); } catch {}
-  // Try fenced code block
-  const m = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (m) {
-    try { return JSON.parse(m[1]); } catch {}
-  }
-  // Try a looser brace slice
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  if (start !== -1 && end !== -1 && end > start) {
-    try { return JSON.parse(text.slice(start, end + 1)); } catch {}
-  }
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) { try { return JSON.parse(fence[1]); } catch {} }
+  const s = text.indexOf("{"), e = text.lastIndexOf("}");
+  if (s !== -1 && e > s) { try { return JSON.parse(text.slice(s, e + 1)); } catch {} }
   return null;
 }
 
-async function getAdvice(env: Env, countryLabel: string) {
-  // choose model (low cost fast)
-  const model = env.MODEL || "gpt-4o-mini";
+async function getAdvice(env: Env, model: string, countryLabel: string) {
+  if (!env.OPENAI_API_KEY) throw new Error("Missing OPENAI_API_KEY");
 
+  const system = `You are a travel assistant. Output ONLY JSON, no prose.`;
   const prompt = `
-Return STRICT JSON (no commentary) for travel to "${countryLabel}" with this shape:
+Return STRICT JSON for travel to "${countryLabel}" with shape:
 
 {
-  "visa": [ "bullet", ... 4-6 total ],
-  "laws": [ "bullet", ... ],
-  "safety": [ "bullet", ... ],
-  "health": [ "bullet", ... ],
-  "emergency_numbers": { "police": "string", "ambulance": "string", "fire": "string", "notes": ["optional", ...] }
+  "visa": ["bullet", ...],
+  "laws": ["bullet", ...],
+  "safety": ["bullet", ...],
+  "health": ["bullet", ...],
+  "emergency_numbers": {
+    "police": "string",
+    "ambulance": "string",
+    "fire": "string",
+    "notes": ["optional", ...]
+  }
 }
 
-Guidelines:
-- Keep bullets short, clear, up-to-date.
-- If a field is unknown, provide a sensible generic but truthful note (e.g. "Dial 112 across EU").
-- Use strings only. No markdown. No prose outside JSON.
-`;
+Keep bullets short and factual. If you're unsure, include a cautious generic note.
+Output ONLY JSON.
+`.trim();
 
+  // Use the Responses API (works well on Workers)
   const res = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
@@ -86,70 +130,31 @@ Guidelines:
     },
     body: JSON.stringify({
       model,
-      input: prompt,
+      input: [{ role: "system", content: system }, { role: "user", content: prompt }],
       temperature: 0.2,
-    }),
+      max_output_tokens: 900
+    })
   });
 
   if (!res.ok) {
-    throw new Error(`OpenAI HTTP ${res.status}`);
+    const text = await safeText(res);
+    return { parsed: null, source: "ai", model, status: res.status, raw: text };
   }
 
   const data = await res.json();
 
-  // The Responses API returns output in a structured array; pick the first text
-  const text =
-    data?.output?.[0]?.content?.[0]?.text ??
-    data?.choices?.[0]?.message?.content ?? // fallback if using chat-like models
-    "";
+  // Try multiple shapes from /v1/responses
+  const rawText =
+    data.output_text ??
+    data.output?.[0]?.content?.[0]?.text ??
+    data.choices?.[0]?.message?.content ??
+    typeof data === "string" ? data : JSON.stringify(data);
 
-  const parsed = extractJson(text);
-  if (!parsed) throw new Error("AI did not return valid JSON");
+  const parsed = rawText ? extractJson(String(rawText)) : null;
 
-  return { model, advice: parsed };
+  return { parsed, source: "ai", model, status: res.status };
 }
 
-export default {
-  async fetch(request: Request, env: Env) {
-    // CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS });
-    }
-    if (request.method !== "GET") {
-      return err(405, "Use GET or OPTIONS");
-    }
-
-    const url = new URL(request.url);
-    const code = (url.searchParams.get("country") || "FR").toUpperCase();
-
-    try {
-      const basics = await getBasics(code);
-
-      // For a friendly label, use official name (front-end can already map)
-      const label = basics.officialName || code;
-
-      let model = "";
-      let advice: any = null;
-      try {
-        const ai = await getAdvice(env, label);
-        advice = ai.advice;
-        model = ai.model;
-      } catch (e) {
-        // AI failure is OK – we still return basics
-        advice = null;
-      }
-
-      return ok({
-        country: code,
-        code,
-        updated_at: new Date().toISOString(),
-        basics,
-        advice,
-        source: advice ? "ai" : "fallback",
-        model: advice ? model : undefined,
-      });
-    } catch (e: any) {
-      return err(500, e?.message || "Server error");
-    }
-  },
-};
+async function safeText(res: Response) {
+  try { return await res.text(); } catch { return "<no-body>"; }
+}

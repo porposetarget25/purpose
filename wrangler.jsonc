@@ -1,6 +1,6 @@
 {
   "name": "purpose",
-  "main": "src/worker.js",
+  "main": "src/index.ts",
   "compatibility_date": "2025-08-30",
   "workers_dev": true
 }
