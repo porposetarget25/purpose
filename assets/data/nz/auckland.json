@@ -42,9 +42,9 @@
         "https://www.parnell.net.nz/wp-content/uploads/2020/06/AucklandMuseum_Parnell_bannerpic.jpg"
       ],
       "audio": {
-        "English": "assets/audio/nz/auckland/skyTower/skytower_english.mp3",
-        "Hindi":   "assets/audio/nz/auckland/skyTower/skytower_hindi.mp3",
-        "Chinese": "assets/audio/nz/auckland/skyTower/skytower_english.mp3"
+        "English": "assets/audio/nz/auckland/auckland-domain/English_Auckland_War_Museum.mp3",
+        "Hindi":   "assets/audio/nz/auckland/auckland-domain/Hindi_Auckland_War_Museum.mp3",
+        "Chinese": "assets/audio/nz/auckland/auckland-domain/English_Auckland_War_Museum.mp3"
       },
       "placeQuery": "Auckland Domain",
       "coords": { "lat": -36.8650, "lng": 174.7762 }
