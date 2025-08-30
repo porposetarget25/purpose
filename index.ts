@@ -15,12 +15,10 @@ export default {
         // e.g. call OpenAI / RestCountries / merge data, etc.
         const data = {
           country,
-          updated_at: new Date().toISOString(),
-          visa: ["..."],
-          laws: ["..."],
-          safety: ["..."],
-          emergency: ["Police: 155", "Ambulance: 112", "Fire: 110"],
-          health: ["..."],
+            updated_at: new Date().toISOString(),
+            visa, laws, safety, emergency, health,
+            source: "ai",
+            model: "gpt-4o-mini",
           disclaimer:
             "Info can change. Verify with official sources before you travel."
         };

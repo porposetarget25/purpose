@@ -78,18 +78,18 @@
 
 <script>
     /* =========================
-       Travel & Safety (static)
+       Travel & Safety (AI + fallback)
        ========================= */
 
     const selectEl = document.getElementById('country-select');
     const out = document.getElementById('ts-output');
 
-    /* Countries: use ISO alpha-2 codes (stable for RestCountries) */
+    /* Countries (ISO alpha-2) */
     const COUNTRIES = [
       { code: "TR", name: "Turkey" },
       { code: "IN", name: "India" },
       { code: "AE", name: "UAE" },
-     { code: "ZA", name: "South Africa" },
+      { code: "ZA", name: "South Africa" },
       { code: "US", name: "USA" },
       { code: "GB", name: "United Kingdom" },
       { code: "NZ", name: "New Zealand" },
@@ -102,7 +102,7 @@
       { code: "CA", name: "Canada" }
     ];
 
-    /* Emergency numbers for common destinations */
+    /* Emergency numbers (fallback) */
     const EMERGENCY = {
       TR: { police: "155", ambulance: "112", fire: "110" },
       IN: { police: "112", ambulance: "108", fire: "101" },
@@ -117,24 +117,25 @@
       ES: { police: "112", ambulance: "112", fire: "112" },
       AU: { police: "000", ambulance: "000", fire: "000" },
       CA: { police: "911", ambulance: "911", fire: "911" },
-      ZA: { police: "10111", ambulance: "10177", fire: "10177"}
+      ZA: { police: "10111", ambulance: "10177", fire: "10177" }
     };
 
     /* ---- Small helpers ---- */
     const TTL_MS = 24 * 60 * 60 * 1000;
-    const ck = (code) => `ts:c:${code}`;
+    const ckSummary = (code) => `ts:summary:${code}`;
+    const ckAI      = (code) => `ts:ai:${code}`;
 
-    function getCached(code) {
+    function getCached(key) {
       try {
-        const raw = localStorage.getItem(ck(code));
+        const raw = localStorage.getItem(key);
         if (!raw) return null;
         const obj = JSON.parse(raw);
         if (Date.now() - obj.saved > TTL_MS) return null;
         return obj.data;
       } catch { return null; }
     }
-    function setCached(code, data) {
-      try { localStorage.setItem(ck(code), JSON.stringify({ saved: Date.now(), data })); } catch {}
+    function setCached(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ saved: Date.now(), data })); } catch {}
     }
 
     function sectionTpl(title, items) {
@@ -149,83 +150,19 @@
       out.innerHTML = `<article class="ts-card ts-note">Couldn’t load info for <strong>${label}</strong>. ${msg || "Please try again."}</article>`;
     }
 
-    function renderCountryData(label, summary, code) {
-      const e = EMERGENCY[code] || {};
-      const updated = new Date().toLocaleString();
+    /* =========================
+       DATA FETCHERS
+       ========================= */
 
-      const quick = `
-        <article class="ts-card">
-          <div class="ts-kv">
-            <b>Official</b><span>${summary.officialName}</span>
-            <b>Capital</b><span>${summary.capital}</span>
-            <b>Region</b><span>${summary.region}${summary.subregion ? " — " + summary.subregion : ""}</span>
-            <b>Languages</b><span>${summary.languages}</span>
-            <b>Currency</b><span>${summary.currency}</span>
-            <b>Dial code</b><span>${summary.callingCode}</span>
-          </div>
-        </article>`;
-
-      const visa = [
-        `Passport validity: aim for <b>6+ months</b> beyond arrival.`,
-        `Check official visa policy for ${label}: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " visa requirements official")}">search</a> or your embassy.`,
-        `Many countries require <b>onward ticket</b> and <b>proof of funds</b>.`,
-        `Travel insurance is strongly recommended (medical + trip cover).`
-      ];
-
-      const laws = [
-        `Follow local laws and customs; penalties can be severe.`,
-        `Alcohol rules vary (age, where you can drink).`,
-        `Photography: avoid <b>government, military</b> or sensitive sites.`,
-        `Drones often need permits; check rules before flying.`
-      ];
-
-      const safety = [
-        `Stick to well-lit, populated areas; safeguard valuables.`,
-        `Use licensed taxis or well-rated ride-hailing apps.`,
-        `Beware of common scams in tourist zones; verify prices in advance.`,
-        `Keep copies of documents (passport, visa, insurance).`
-      ];
-
-      const emergency = [
-        `Police: <b>${e.police || "See local number"}</b>`,
-        `Ambulance: <b>${e.ambulance || "See local number"}</b>`,
-        `Fire: <b>${e.fire || "See local number"}</b>`,
-        `Locate your embassy/consulate: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " embassy contact")}">find contact</a>`
-      ];
-
-      const health = [
-        `Check vaccine advice: <a target="_blank" rel="noopener" href="https://wwwnc.cdc.gov/travel">CDC Travel Health</a> / <a target="_blank" rel="noopener" href="https://travelhealthpro.org.uk/countries">UK TravelHealthPro</a>.`,
-        `Drink bottled/treated water where tap water isn’t potable.`,
-        `Carry any prescription meds in original packaging + copy of prescription.`,
-        `Know nearest hospitals/clinics in your area.`
-      ];
-
-      const disclaimer = `
-        <article class="ts-card ts-note">
-          This page is an informational summary only (updated: ${updated}). Rules change often—always verify with official sources before you travel.
-        </article>`;
-
-      out.innerHTML = `
-        <div class="ts-muted" style="margin:6px 0">${label}</div>
-        ${quick}
-        ${sectionTpl("1) Visa & Entry Requirements", visa)}
-        ${sectionTpl("2) Local Laws & Rules", laws)}
-        ${sectionTpl("3) Safety & Security", safety)}
-        ${sectionTpl("4) Emergency Numbers", emergency)}
-        ${sectionTpl("5) Health Precautions", health)}
-        ${disclaimer}
-      `;
-    }
-
-    /* Fetch country basics from RestCountries (alpha code) */
+    // Quick facts from RestCountries (not GPT)
     async function fetchCountrySummary(code) {
-      const cached = getCached(code);
+      const cacheKey = ckSummary(code);
+      const cached = getCached(cacheKey);
       if (cached) return cached;
 
-      const url = `https://purpose.porpose-target-25.workers.dev/api/travel-safety?country=${encodeURIComponent(code)}`;
+      const url = `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`;
       const res = await fetch(url, { cache: "no-store" });
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`RestCountries HTTP ${res.status}`);
       const [c] = await res.json();
 
       const data = {
@@ -241,11 +178,104 @@
             : "—"
       };
 
-      setCached(code, data);
+      setCached(cacheKey, data);
       return data;
     }
 
-    /* UI wiring */
+    // GPT/Worker policy sections
+    async function fetchPoliciesFromWorker(code) {
+      const cacheKey = ckAI(code);
+      const cached = getCached(cacheKey);
+      if (cached) return cached;
+
+      const url = `https://purpose.porpose-target-25.workers.dev/api/travel-safety?country=${encodeURIComponent(code)}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Worker HTTP ${res.status}`);
+      const json = await res.json();
+
+      setCached(cacheKey, json);
+      return json;
+    }
+
+    /* =========================
+       RENDER
+       ========================= */
+
+    function renderCountryData(label, summary, code, ai) {
+      const e = EMERGENCY[code] || {};
+      const updatedLocal = new Date().toLocaleString();
+
+      const quick = `
+        <article class="ts-card">
+          <div class="ts-kv">
+            <b>Official</b><span>${summary.officialName}</span>
+            <b>Capital</b><span>${summary.capital}</span>
+            <b>Region</b><span>${summary.region}${summary.subregion ? " — " + summary.subregion : ""}</span>
+            <b>Languages</b><span>${summary.languages}</span>
+            <b>Currency</b><span>${summary.currency}</span>
+            <b>Dial code</b><span>${summary.callingCode}</span>
+          </div>
+        </article>`;
+
+      // If AI (Worker) responded, use it; else fall back to local lists
+      const visa      = ai?.visa      ?? [
+        `Passport validity: aim for <b>6+ months</b> beyond arrival.`,
+        `Check official visa policy for ${label}: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " visa requirements official")}">search</a> or your embassy.`,
+        `Many countries require <b>onward ticket</b> and <b>proof of funds</b>.`,
+        `Travel insurance is strongly recommended (medical + trip cover).`
+      ];
+      const laws      = ai?.laws      ?? [
+        `Follow local laws and customs; penalties can be severe.`,
+        `Alcohol rules vary (age, where you can drink).`,
+        `Photography: avoid <b>government, military</b> or sensitive sites.`,
+        `Drones often need permits; check rules before flying.`
+      ];
+      const safety    = ai?.safety    ?? [
+        `Stick to well-lit, populated areas; safeguard valuables.`,
+        `Use licensed taxis or well-rated ride-hailing apps.`,
+        `Beware of common scams in tourist zones; verify prices in advance.`,
+        `Keep copies of documents (passport, visa, insurance).`
+      ];
+      const emergency = ai?.emergency ?? [
+        `Police: <b>${e.police || "See local number"}</b>`,
+        `Ambulance: <b>${e.ambulance || "See local number"}</b>`,
+        `Fire: <b>${e.fire || "See local number"}</b>`,
+        `Locate your embassy/consulate: <a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(label + " embassy contact")}">find contact</a>`
+      ];
+      const health    = ai?.health    ?? [
+        `Check vaccine advice: <a target="_blank" rel="noopener" href="https://wwwnc.cdc.gov/travel">CDC Travel Health</a> / <a target="_blank" rel="noopener" href="https://travelhealthpro.org.uk/countries">UK TravelHealthPro</a>.`,
+        `Drink bottled/treated water where tap water isn’t potable.`,
+        `Carry any prescription meds in original packaging + copy of prescription.`,
+        `Know nearest hospitals/clinics in your area.`
+      ];
+
+      const aiBadge = ai?.source === "ai"
+        ? `<span class="ts-badge" title="Generated by ${ai.model || 'AI'}">AI-generated</span>`
+        : "";
+
+      const disclaimer = `
+        <article class="ts-card ts-note">
+          Source: ${ai?.source || 'local fallback'} ${aiBadge}
+          • Updated: ${ai?.updated_at ? new Date(ai.updated_at).toLocaleString() : updatedLocal}.
+          Rules change—verify with official sources before you travel.
+        </article>`;
+
+      out.innerHTML = `
+        <div class="ts-muted" style="margin:6px 0">${label}</div>
+        ${quick}
+        ${sectionTpl("1) Visa & Entry Requirements", visa)}
+        ${sectionTpl("2) Local Laws & Rules", laws)}
+        ${sectionTpl("3) Safety & Security", safety)}
+        ${sectionTpl("4) Emergency Numbers", emergency)}
+        ${sectionTpl("5) Health Precautions", health)}
+        ${disclaimer}
+      `;
+    }
+
+    /* =========================
+       UI WIRING
+       ========================= */
+
     function populateSelect() {
       selectEl.innerHTML = COUNTRIES
         .map(c => `<option value="${c.code}">${c.name}</option>`)
@@ -256,8 +286,11 @@
       const label = COUNTRIES.find(c => c.code === code)?.name || code;
       renderLoading(label);
       try {
-        const summary = await fetchCountrySummary(code);
-        renderCountryData(label, summary, code);
+        const [summary, ai] = await Promise.all([
+          fetchCountrySummary(code),
+          fetchPoliciesFromWorker(code).catch(() => null) // don’t block UI on AI failure
+        ]);
+        renderCountryData(label, summary, code, ai);
       } catch (err) {
         console.error(err);
         renderError(label, "Check your connection or try again later.");
@@ -267,9 +300,9 @@
     /* Init */
     populateSelect();
     showCountryByCode(COUNTRIES[0].code);
-
     selectEl.addEventListener("change", () => showCountryByCode(selectEl.value));
 </script>
+
 
 </body>
 </html>
