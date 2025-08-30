@@ -1,0 +1,6 @@
+{
+  "name": "purpose",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-08-30",
+  "workers_dev": true
+}
