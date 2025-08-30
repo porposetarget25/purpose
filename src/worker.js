@@ -27,7 +27,7 @@ export default {
     if (url.pathname === "/api/travel-safety") {
       const code = (url.searchParams.get("country") || "").toUpperCase();
       if (!code) {
-        return new Response(JSON.stringify({ error: "country is surely required" }), {
+        return new Response(JSON.stringify({ error: "country is required" }), {
           status: 400,
           headers: { ...headers, "Content-Type": "application/json" }
         });
