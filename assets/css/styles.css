@@ -110,7 +110,13 @@ body {
 }
 
 /* ---------- Gallery & Cards ---------- */
-.gallery { display: grid; gap: 24px; margin-top: 24px; }
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+  margin-top: 24px; /* 👈 add this for spacing below hero */
+}
+
 .gallery[hidden] { display: none !important; margin: 0; }
 
 .image-grid {
