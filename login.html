@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sign in · World Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1920&auto=format&fit=crop");
+      --bg2: url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1920&auto=format&fit=crop");
+      --bg3: url("https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1920&auto=format&fit=crop");
+      --bg4: url("https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1920&auto=format&fit=crop");
+      --brand:#0a3d62;
+    }
+
+    * { box-sizing: border-box; }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:#0b1220;
+      overflow:hidden;
+    }
+
+    /* Background slideshow (two layers cross-fading) */
+    .bg, .bg2{
+      position:fixed; inset:0; background-size:cover; background-position:center;
+      filter: brightness(.72) saturate(1.05);
+      transition: opacity 1200ms ease-in-out, transform 1200ms ease-in-out;
+      will-change: opacity, transform;
+    }
+    .bg2{ opacity:0; }
+    .overlay{
+      position:fixed; inset:0;
+      background: radial-gradient(1200px 800px at 80% 10%, rgba(255,255,255,.25), transparent 60%),
+                  linear-gradient(180deg, rgba(5,17,38,.55), rgba(5,17,38,.45) 40%, rgba(5,17,38,.65));
+      pointer-events:none;
+    }
+
+    /* Centering container */
+    .wrap{
+      position:relative; display:grid; place-items:center; height:100%; padding:24px;
+    }
+
+    /* Glassmorphism card */
+    .card{
+      width:min(92vw, 420px);
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(18px) saturate(1.1);
+      -webkit-backdrop-filter: blur(18px) saturate(1.1);
+      border:1px solid rgba(255,255,255,.35);
+      border-radius: 18px;
+      box-shadow: 0 25px 60px rgba(0,0,0,.35);
+      padding:28px 26px;
+      animation: floatIn 700ms ease-out;
+    }
+    @keyframes floatIn{
+      from{ transform: translateY(14px); opacity:0 }
+      to{ transform: translateY(0); opacity:1 }
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px; justify-content:center; margin-bottom:8px;
+      color:#fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,.35);
+    }
+    .brand .logo{ font-size:26px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.45)); }
+    .brand h1{ font-size:22px; margin:0; font-weight:700; letter-spacing:.3px; }
+
+    .subtitle{
+      text-align:center; margin:0 0 18px; color:#eef3ff; opacity:.9; font-size:12.5px;
+    }
+
+    label{ display:block; font-size:12px; color:#10233f; margin:12px 6px 6px; font-weight:600; }
+    .field{
+      position:relative;
+    }
+    input{
+      width:100%; padding:12px 44px 12px 12px;
+      border-radius:12px; border:1px solid rgba(255,255,255,.65);
+      outline:none; background:rgba(255,255,255,.9);
+      font-size:14px;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    input:focus{
+      border-color:#7aa6ff;
+      box-shadow:0 0 0 4px rgba(122,166,255,.25);
+    }
+    .toggle{
+      position:absolute; right:8px; top:50%; transform:translateY(-50%);
+      border:0; background:transparent; cursor:pointer; padding:8px; line-height:0; opacity:.7;
+    }
+    .toggle:hover{ opacity:1 }
+
+    .btn{
+      margin-top:16px; width:100%; padding:12px 14px; border:0; cursor:pointer;
+      border-radius:12px; font-weight:700; color:white; letter-spacing:.2px;
+      background: linear-gradient(135deg, #0a3d62, #3b82f6);
+      box-shadow: 0 10px 24px rgba(10,61,98,.35);
+      transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn:hover{ filter:brightness(1.05) }
+    .btn:active{ transform: translateY(1px); box-shadow: 0 8px 18px rgba(10,61,98,.4); }
+
+    .error{
+      margin-top:10px; color:#b00020; background:rgba(255,255,255,.9);
+      border:1px solid rgba(176,0,32,.25); padding:10px 12px; border-radius:10px; display:none;
+      font-size:13px;
+    }
+
+    .foot{
+      margin-top:14px; font-size:12px; text-align:center; color:#e9f2ff; opacity:.85;
+    }
+    .foot a{ color:#fff; }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .bg, .bg2{ transition:none }
+      .card{ animation:none }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg"></div>
+  <div class="bg2"></div>
+  <div class="overlay"></div>
+
+  <!-- Center -->
+  <div class="wrap">
+    <form class="card" onsubmit="return login(event)" autocomplete="off">
+      <div class="brand">
+        <div class="logo">🌐</div>
+        <h1>World Explorer</h1>
+      </div>
+      <p class="subtitle">Sign in to continue your journey</p>
+
+      <label for="user">Username</label>
+      <div class="field">
+        <input id="user" name="username" placeholder="e.g. test" required />
+      </div>
+
+      <label for="pass">Password</label>
+      <div class="field">
+        <input id="pass" name="password" type="password" placeholder="••••" required />
+        <button class="toggle" type="button" aria-label="Show password" onclick="togglePass()">
+          👁️
+        </button>
+      </div>
+
+      <button class="btn" type="submit">Login</button>
+      <div id="err" class="error">Invalid username or password</div>
+    </form>
+  </div>
+
+  <script>
+    // If already logged in, jump to target
+    (function(){
+      const raw = localStorage.getItem("auth");
+      if (raw === "ok") {
+        const next = new URLSearchParams(location.search).get("next") || "index.html";
+        location.replace(next);
+      }
+    })();
+
+    function togglePass(){
+      const p = document.getElementById("pass");
+      p.type = (p.type === "password") ? "text" : "password";
+    }
+
+    function login(e){
+      e.preventDefault();
+      const u = document.getElementById("user").value.trim();
+      const p = document.getElementById("pass").value.trim();
+
+      if (u === "test" && p === "demo") {
+        // store simple flag (keep your existing gate working)
+        localStorage.setItem("auth", "ok");
+        const next = new URLSearchParams(location.search).get("next") || "index.html";
+        location.href = next;
+      } else {
+        const err = document.getElementById("err");
+        err.style.display = "block";
+        err.textContent = "Invalid username or password";
+      }
+    }
+
+    // --- Background slideshow (crossfade) ---
+    const images = [getComputedStyle(document.documentElement).getPropertyValue('--bg1'),
+                    getComputedStyle(document.documentElement).getPropertyValue('--bg2'),
+                    getComputedStyle(document.documentElement).getPropertyValue('--bg3'),
+                    getComputedStyle(document.documentElement).getPropertyValue('--bg4')].map(s => s.trim());
+
+    const layer1 = document.querySelector('.bg');
+    const layer2 = document.querySelector('.bg2');
+    let idx = 0, showingFirst = true;
+
+    // Preload images
+    images.forEach(src => { const i = new Image(); i.src = src.slice(4,-1); });
+
+    function setBg(el, src){ el.style.backgroundImage = src; }
+
+    setBg(layer1, images[0]);
+    setBg(layer2, images[1]);
+    idx = 1;
+
+    function swap(){
+      const next = images[(idx + 1) % images.length];
+      if (showingFirst){
+        setBg(layer2, next);
+        layer2.style.opacity = 1;
+        layer1.style.opacity = 0;
+      } else {
+        setBg(layer1, next);
+        layer1.style.opacity = 1;
+        layer2.style.opacity = 0;
+      }
+      showingFirst = !showingFirst;
+      idx = (idx + 1) % images.length;
+    }
+
+    // Change every 7 seconds
+    let timer = setInterval(swap, 7000);
+    // Pause animation if tab hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearInterval(timer);
+      else timer = setInterval(swap, 7000);
+    }, { passive:true });
+  </script>
+</body>
+</html>

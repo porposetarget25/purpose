@@ -1,55 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <title>World Explorer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="preload" href="assets/css/styles.css" as="style"/>
-    <link rel="stylesheet" href="assets/css/styles.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#0a3d62">
+  <meta charset="UTF-8" />
+  <title>World Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preload" href="assets/css/styles.css" as="style" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0a3d62">
+
+  <!-- 🔒 Simple gate: if not logged in, bounce to login page -->
+  <script>
+    if (localStorage.getItem("auth") !== "ok") {
+      window.location.href = "login.html";
+    }
+    function logout() {
+      localStorage.removeItem("auth");
+      window.location.href = "login.html";
+    }
+
+  </script>
 </head>
+
 <body>
 
-<!-- Topbar -->
-<nav class="topbar">
+  <!-- Topbar -->
+  <nav class="topbar">
     <div class="topbar__inner container">
-        <a class="brand" href="index.html" aria-label="World Explorer Home">
-            <span class="brand__logo globe">🌐</span>
-            <span class="brand__text">
-        <strong>World Explorer</strong>
-        <small>Explore the World's Wonders</small>
-      </span>
-        </a>
-        <ul class="nav">
-            <li><a class="nav__link is-active" href="index.html">Home</a></li>
-            <li><a class="nav__link" href="travel.html">Travel &amp; Safety</a></li>
-        </ul>
+      <a class="brand" href="index.html" aria-label="World Explorer Home">
+        <span class="brand__logo globe">🌐</span>
+        <span class="brand__text">
+          <strong>World Explorer</strong>
+          <small>Explore the World's Wonders</small>
+        </span>
+      </a>
+      <ul class="nav">
+        <li><a class="nav__link is-active" href="index.html">Home</a></li>
+        <li><a class="nav__link" href="travel.html">Travel &amp; Safety</a></li>
+      </ul>
+      <!-- ✅ Added logout button -->
+      <button 
+        onclick="logout()" 
+        style="margin-left:16px; padding:6px 12px; border:none; border-radius:6px; 
+               background:#0a3d62; color:white; cursor:pointer; font-weight:600;">
+        Logout
+      </button>
     </div>
-</nav>
-<!-- Journey Section -->
-<section class="hero hero--journey"
-         style="--hero-photo: url('assets/images/journey-bg.jpg')">
+  </nav>
+  <!-- Journey Section -->
+  <section class="hero hero--journey" style="--hero-photo: url('assets/images/journey-bg.jpg')">
     <div class="hero__media" aria-hidden="true"></div>
     <div class="hero__overlay"></div>
     <div class="hero__content container">
-        <h2 class="hero__title">Start Your Journey</h2>
+      <h2 class="hero__title">Start Your Journey</h2>
     </div>
-</section>
+  </section>
 
 
-<!-- Two-column layout -->
-<section class="home container">
+  <!-- Two-column layout -->
+  <section class="home container">
     <!-- Sidebar list -->
     <aside class="sidebar" id="country-list" aria-label="Countries"></aside>
 
     <!-- Featured panel -->
     <section class="featured" id="featured" aria-live="polite"></section>
-</section>
+  </section>
 
-<script>
+  <script>
     // ---- Data (you can extend this anytime) ----
     const DATA = {
       countries: [
@@ -89,16 +109,20 @@
           code: "ZA",
           key: "south-africa",
           name: "South Africa",
-          cities: ["Cape Town","Johannesburg","Durban","Pretoria"],
+          cities: ["Cape Town", "Johannesburg", "Durban", "Pretoria"],
           hero: "https://images.unsplash.com/photo-1591205024850-d3420e30469e?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           links: { "Cape Town": "capetownDetails.html" }
         },
-        { code: "US", key: "usa", name: "USA",
-          cities: ["New York","Chicago","LA","SF"],
-          hero: "https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1600&auto=format&fit=crop" },
-        { code: "GB", key: "uk", name: "United Kingdom",
-          cities: ["London","Manchester","Bristol","Bath"],
-          hero: "https://images.unsplash.com/photo-1587447799293-e50233d6f07f?q=80&w=1600&auto=format&fit=crop" }
+        {
+          code: "US", key: "usa", name: "USA",
+          cities: ["New York", "Chicago", "LA", "SF"],
+          hero: "https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1600&auto=format&fit=crop"
+        },
+        {
+          code: "GB", key: "uk", name: "United Kingdom",
+          cities: ["London", "Manchester", "Bristol", "Bath"],
+          hero: "https://images.unsplash.com/photo-1587447799293-e50233d6f07f?q=80&w=1600&auto=format&fit=crop"
+        }
       ]
     };
 
@@ -110,10 +134,10 @@
     }
 
     // ---- Build sidebar list ----
-    const sidebar  = document.getElementById("country-list");
+    const sidebar = document.getElementById("country-list");
     const featured = document.getElementById("featured");
 
-    function countryItemTpl(c, active=false) {
+    function countryItemTpl(c, active = false) {
       return `
         <button class="country-item${active ? ' is-active' : ''}" data-key="${c.key}">
           <span class="country-item__flag" aria-hidden="true">${countryCodeToFlagEmoji(c.code)}</span>
@@ -128,7 +152,7 @@
 
     function renderSidebar(activeKey) {
       sidebar.innerHTML = DATA.countries
-        .map((c, i) => countryItemTpl(c, (activeKey ? c.key===activeKey : i===0)))
+        .map((c, i) => countryItemTpl(c, (activeKey ? c.key === activeKey : i === 0)))
         .join("");
     }
 
@@ -146,7 +170,7 @@
         `;
       }).join("");
 
-    featured.innerHTML = `
+      featured.innerHTML = `
       <article class="feature-card" style="--bg:url('${country.hero}')">
         <div class="feature-card__overlay"></div>
 
@@ -196,7 +220,8 @@
       // scroll featured panel into view on mobile
       scrollIntoViewIfMobile(featured);
     });
-</script>
+  </script>
 
 </body>
+
 </html>
